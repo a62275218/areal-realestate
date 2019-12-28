@@ -1,21 +1,55 @@
 <template>
-  <div class="page">
-    <div>Areal 房产管理</div>
-    <div>
+  <div class="bg">
+    <div class="top-card">
       <div class="index-title">
         <div>我的房源</div>
         <div>添加房源</div>
       </div>
-      <div>
-        <img src="/static/images/areal.png" />
+      <swiper
+        indicator-dots
+        circular
+        style="min-height:580rpx"
+        previous-margin="30rpx"
+        next-margin="30rpx"
+        indicator-active-color="#1fa637"
+      >
+        <swiper-item @click="navigateHouse(url)">
+          <div class="carousel-card">
+            <img src="/static/images/areal.png" />
+          </div>
+          <div class="carousel-desc">
+            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
+            <div class="desc">
+              <div>X房X厅X卫</div>
+              <div class="status">OWNED</div>
+            </div>
+          </div>
+        </swiper-item>
+        <swiper-item>
+          <div class="carousel-card">
+            <img src="/static/images/areal.png" />
+          </div>
+          <div class="carousel-desc"></div>
+        </swiper-item>
+        <swiper-item>
+          <div class="carousel-card">
+            <img src="/static/images/areal.png" />
+          </div>
+          <div class="carousel-desc"></div>
+        </swiper-item>
+      </swiper>
+      <div class="more">查看房源列表 >></div>
+    </div>
+    <div class="gap"></div>
+    <div class="white-card menu">
+      <div class="menu-item" v-for="(item,idx) in menuList" :key="idx" @click="navigate(item.url)">
+        <image :src="item.img" alt mode="widthFix" />
+        <div>{{item.content}}</div>
       </div>
-      <div>关于公司</div>
-      <div>
-        在2010年7月26日成立的公司针对满足项目投资者的利益要求并帮助他们得赢。
-        分布范围地产有限公司是一家在开发、投资与资产管理范围内提供全面服务的公司。
-        分布范围地产有限公司在发展和实施贸易、商业、住宅物业的项目上采用国际经验。
-        我公司针对满足项目投资者的利益要求并帮助他们得赢。
-      </div>
+    </div>
+    <div class="footer">
+      <div>微信公众号: xxxxxxxxxxxxxxxx</div>
+      <div>澳瑞网站: www.areal.com</div>
     </div>
   </div>
 </template>
@@ -25,16 +59,33 @@ import { mapState } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+      url: "/pages/housedetail/main",
+      menuList: [
+        {
+          img: "/static/images/Component6.png",
+          content: "租金一览",
+          url: "/pages/housedetail/main"
+        },
+        {
+          img: "/static/images/Component4.png",
+          content: "账单明细"
+        },
+        {
+          img: "/static/images/Component4.png",
+          content: "物业维护"
+        },
+        {
+          img: "/static/images/Component4.png",
+          content: "例行检查"
+        }
+      ]
+    };
   },
   async mounted() {
-    console.log("mounted");
-
     const api = await this.$request("api");
   },
   computed: mapState(["userInfo"]),
-
-  components: {},
 
   methods: {
     bindViewTap() {
@@ -48,6 +99,10 @@ export default {
     clickHandle(ev) {
       console.log("clickHandle:", ev);
       // throw {message: 'custom test'}
+    },
+    navigateHouse(url){
+      console.log(url)
+      mpvue.navigateTo({url})
     }
   },
 
@@ -57,9 +112,78 @@ export default {
 };
 </script>
 
-<style scoped>
-.index-title {
+<style lang="scss" scoped>
+.top-card {
+  border-bottom-left-radius: 20rpx;
+  border-bottom-right-radius: 20rpx;
+  padding: 40rpx 0 20rpx 0;
+  background: #fff;
+  .index-title {
+    padding: 40rpx;
+    display: flex;
+    justify-content: space-between;
+  }
+  .more {
+    text-align: center;
+    color: $gray-color;
+    font-size: 24rpx;
+    padding: 20rpx;
+  }
+}
+
+.carousel-card {
+  overflow: hidden;
+  margin: 0 auto;
+  width: 95%;
+  background: #fff;
+  @include shadow-card;
+  height: 0;
+  padding-bottom: 55%;
+  img {
+    width: 100%;
+  }
+}
+.carousel-desc {
+  padding: 0 20rpx;
+  .address {
+    color: $font-color;
+    padding: 24rpx 0;
+  }
+  .desc {
+    display: flex;
+    justify-content: space-between;
+    .status {
+      color: $font-color;
+      font-weight: bold;
+    }
+  }
+}
+
+.menu {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  .menu-item {
+    width: 50%;
+    border: 2rpx solid $bg-color;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $gray-color;
+    padding: 60rpx 0;
+    image {
+      width: 50rpx;
+      margin-right: 20rpx;
+    }
+  }
+}
+
+.footer {
+  color: $font-color;
+  text-align: center;
+  font-size: 24rpx;
+  div {
+    padding-top: 20rpx;
+  }
 }
 </style>

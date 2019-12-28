@@ -1,0 +1,26 @@
+$font-color: #1fa637;
+$gray-color: rgb(188, 188, 188);
+$bg-color: rgb(239, 239, 239);
+
+page {
+  min-height: 100%;
+  .bg {
+    height: 100%;
+    background: $bg-color;
+    min-height: 100vh;
+  }
+}
+
+.white-card {
+  background: #fff;
+  border-radius: 20rpx;
+}
+
+.gap {
+  height: 10rpx;
+}
+
+@mixin shadow-card {
+  border-radius: 20rpx;
+  box-shadow: 0 12rpx 10rpx rgba(0, 0, 0, 0.6);
+}
