@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/housedetail/main"
+    "pages/housedetail/main",
+    "pages/myself/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -19,8 +20,8 @@
         "selectedIconPath":"/static/images/Component 3 – 3.png"
       },
       {
-        "pagePath":"pages/index/main",
-        "text":"首页",
+        "pagePath":"pages/myself/main",
+        "text":"个人中心",
         "iconPath":"/static/images/Component 3 – 3.png",
         "selectedIconPath":"/static/images/Component 3 – 3.png"
       }
