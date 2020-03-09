@@ -66,7 +66,7 @@ export default {
     position:relative;
     .emphasize {
       position:absolute;
-      bottom:60rpx;
+      bottom:30rpx;
       color: $warn-color !important;
       font-size: 32rpx;
     }
@@ -78,7 +78,7 @@ export default {
       margin: 0 auto;
       height: 50rpx;
       font-size: 32rpx;
-      width: 70%;
+      width: 90%;
       border-bottom: 2rpx solid $bg-color;
     }
     .textarea {

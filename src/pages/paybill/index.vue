@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="page-gap"></div>
-    <div v-for="item in paymentList" :key="item">
+    <div v-for="item in paymentList" :key="item.id">
       <div class="white-card billcard" v-if="item.active">
         <div class="title">{{item.address}}</div>
         <div class="content">{{item.description}}</div>
@@ -145,27 +145,46 @@ export default {
       });
     },
     async getFilterInfo() {
+      console.log(this.tabbar[1].active)
       const startTime = this.startDate
         ? Date.parse(new Date(this.startDate)) / 1000
         : 0;
       const endTime = this.endDate
         ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
         : (Date.parse(new Date()) + 86400000) / 1000;
-      const requestParam = this.searchID
-        ? {
-            id: this.userInfo.id,
+      let requestParam;
+      if (this.tabbar[1].active) {
+        if (this.searchID) {
+          requestParam = {
+            userId: this.userInfo.id,
             houseId: this.searchID,
             startTime,
             endTime
-          }
-        : {
-            id: this.userInfo.id,
+          };
+        } else {
+          requestParam = {
+            userId: this.userInfo.id,
             startTime,
             endTime
           };
-      let paymentList = await this.$request("fetchPaymentByHouseIdWithTime", {
-        data: requestParam
-      });
+        }
+      } else {
+        if (this.searchID) {
+          requestParam = {
+            houseId: this.searchID
+          };
+        } else {
+          requestParam = {
+            userId: this.userInfo.id
+          };
+        }
+      }
+      let paymentList = await this.$request(
+        "fetchPaymentByHouseIdorUserIdWithTime",
+        {
+          data: requestParam
+        }
+      );
       paymentList.forEach(item => {
         item.address = this.houseList.find(i => {
           return i.id === item.belongHouseId;
@@ -174,7 +193,6 @@ export default {
           (item.status === "已成功" && this.tabbar[1].active) ||
           (item.status !== "已成功" && this.tabbar[0].active);
       });
-      console.log(paymentList);
       this.paymentList = paymentList;
     }
   }

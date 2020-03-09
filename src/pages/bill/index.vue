@@ -72,7 +72,10 @@
     <div v-for="item in rentalInfo" :key="item">
       <div class="page-gap"></div>
       <div class="white-card detail-card">
-        <div class="title">{{item.recordDate}}</div>
+        <div class="title">
+          <div>{{item.recordDate}}</div>
+          <div class="doc" v-if="item.file" @click="previewDoc(item.file)">查看文件</div>
+        </div>
         <div class="row" v-for="(row,idx) in item.info" :key="idx">
           <div>{{row.title}}</div>
           <div v-if="row.type === '收入'" class="in">${{row.content}}</div>
@@ -173,6 +176,34 @@ export default {
       });
       this.income = income;
       this.output = output;
+    },
+    previewDoc(link) {
+      const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
+      if (regExp.test(link)) {
+        mpvue.showLoading({
+          title: "预览文件中"
+        });
+        mpvue.downloadFile({
+          url: link,
+          success: res => {
+            mpvue.openDocument({
+              filePath: res.tempFilePath
+            });
+            mpvue.hideLoading();
+          },
+          fail: () => {
+            mpvue.showToast({
+              title: "下载文件失败",
+              icon: "none"
+            });
+          }
+        });
+      } else {
+        console.log("image");
+        mpvue.previewImage({
+          urls: [link]
+        });
+      }
     },
     getDateRange() {
       this.dateRange = `${new Date().getFullYear() -
@@ -325,11 +356,16 @@ export default {
     color: #000;
   }
   .title {
+    display: flex;
+    justify-content: space-between;
     color: $dark-gray-color;
     font-weight: 500;
     font-size: 30rpx;
     padding: 30rpx 60rpx;
     border-bottom: 2rpx solid $bg-color !important;
+    .doc {
+      color: $font-color;
+    }
   }
   .subtitle {
     color: $dark-gray-color;

@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="物业维护"/>
+    <NavBar title="物业维护" />
     <CustomModal :visible="confirmModalShow" :onClose="()=>this.confirmModalShow=false">
       <CustomDialog
         content="确定同意这个报价吗?"
@@ -10,14 +10,14 @@
       ></CustomDialog>
     </CustomModal>
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
-    <div class="tabbar">
+    <!-- <div class="tabbar">
       <div
         v-for="(item,index) in tabbar"
         @click="handleActive(index)"
         :key="index"
         :class="{'tab active':item.active,'tab':!item.active}"
       >{{item.name}}</div>
-    </div>
+    </div>-->
     <div class="gap" style="height:60rpx;"></div>
     <div class="white-card subtabbar">
       <div class="title">报修进度</div>
@@ -34,7 +34,10 @@
         <div v-if="item.quote.length">
           <div class="sub-item" v-for="(quote,idx) in item.quote" :key="idx">
             <div class="subtitle">
-              <div>{{item.type}}</div>
+              <div>
+                {{item.type}}
+                <span class="recordDate">{{item.recordDate}}</span>
+              </div>
               <div class="status pending" v-if="quote.status ==='待同意'">
                 <div class="round" />
                 <div>等待批准报价</div>
@@ -55,6 +58,7 @@
             </div>
             <div class="price" v-if="quote.status ==='待同意'">报价: ${{quote.price}}</div>
             <div class="approve-price" v-if="quote.status ==='已批准'">报价: ${{quote.price}}</div>
+            <div class="title">报修详情</div>
             <div class="description">{{quote.description}}</div>
             <div class="agree" v-if="quote.status ==='待同意'">
               <div class="left"></div>
@@ -100,7 +104,7 @@ export default {
       ],
       subtabbar: [
         {
-          name: "待报价",
+          name: "报价中",
           value: "待批准",
           active: true
         },
@@ -159,7 +163,6 @@ export default {
       this.changeStatus();
     },
     async changeStatus() {
-      console.log(this.requestQuote);
       if (this.requestQuote) {
         const { quote, item } = this.requestQuote;
         const changeStatusRes = await this.$request(
@@ -173,6 +176,18 @@ export default {
             successMsg: "处理成功"
           }
         );
+        if (changeStatusRes && changeStatusRes.code === 0) {
+          mpvue.showToast({
+            title: "处理成功"
+          });
+        } else {
+          mpvue.showToast({
+            title: "处理失败",
+            icon: "none"
+          });
+        }
+        console.log(changeStatusRes);
+        this.confirmModalShow = false;
         this.getFilterInfo();
       }
     },
@@ -195,16 +210,15 @@ export default {
       this.getFilterInfo();
     },
     async getFilterInfo() {
-      const date = new Date();
-      const previousOneMonth =
-        Date.parse(date.getFullYear(), date.getMonth(), date.getDate()) / 1000;
-      const startTime =
-        this.activeTab.name === "最新详情" ? previousOneMonth : 0;
-      const endTime =
-        this.activeTab.name === "最新详情"
-          ? Date.parse(date) / 1000
-          : previousOneMonth;
-      const hasDateRange = this.startDate && this.endDate;
+      // const date = new Date();
+      // const previousOneMonth =
+      //   Date.parse(date.getFullYear(), date.getMonth(), date.getDate()) / 1000;
+      // const startTime =
+      //   this.activeTab.name === "最新详情" ? previousOneMonth : 0;
+      // const endTime =
+      //   this.activeTab.name === "最新详情"
+      //     ? Date.parse(date) / 1000
+      //     : previousOneMonth;
       if (this.searchID) {
         const maintainList = await this.$request(
           "fetchMaintainByHouseIdWithStatus",
@@ -212,8 +226,8 @@ export default {
             data: {
               id: this.searchID,
               status: this.activeSubTab.value,
-              startTime,
-              endTime
+              startTime: 0,
+              endTime: (Date.parse(new Date()) + 86400000) / 1000
             }
           }
         );
@@ -288,6 +302,7 @@ export default {
   }
 }
 .maintain-item {
+  word-break: break-all;
   padding: 32rpx;
   margin-bottom: 40rpx;
   .sub-item {
@@ -311,6 +326,10 @@ export default {
     display: flex;
     color: $dark-gray-color;
     justify-content: space-between;
+    .recordDate {
+      color: $gray-color;
+      margin-left: 10rpx;
+    }
     .pending {
       color: $warn-color;
       .round {
@@ -345,8 +364,10 @@ export default {
     }
     .status {
       display: flex;
+      min-width: 114rpx;
       justify-content: space-between;
       align-items: center;
+      margin-left: 20rpx;
       .round {
         margin-right: 20rpx;
         width: 18rpx;
