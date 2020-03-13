@@ -2,13 +2,13 @@
   <div class="bg">
     <div class="top-card">
       <div class="index-title">
-        <div>我的房源</div>
-        <div>添加房源</div>
+        <div>我的物业</div>
       </div>
       <swiper
         indicator-dots
         circular
-        style="min-height:580rpx"
+        class="carousel"
+        :style="'min-height:'+carouselHeight"
         previous-margin="30rpx"
         next-margin="30rpx"
         indicator-active-color="#1fa637"
@@ -29,13 +29,25 @@
           <div class="carousel-card">
             <img src="/static/images/areal.png" />
           </div>
-          <div class="carousel-desc"></div>
+          <div class="carousel-desc">
+            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
+            <div class="desc">
+              <div>X房X厅X卫</div>
+              <div class="status">OWNED</div>
+            </div>
+          </div>
         </swiper-item>
         <swiper-item>
           <div class="carousel-card">
             <img src="/static/images/areal.png" />
           </div>
-          <div class="carousel-desc"></div>
+          <div class="carousel-desc">
+            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
+            <div class="desc">
+              <div>X房X厅X卫</div>
+              <div class="status">OWNED</div>
+            </div>
+          </div>
         </swiper-item>
       </swiper>
       <div class="more">查看房源列表 >></div>
@@ -61,6 +73,7 @@ export default {
   data() {
     return {
       url: "/pages/housedetail/main",
+      carouselHeight: "",
       menuList: [
         {
           img: "/static/images/Component6.png",
@@ -83,7 +96,10 @@ export default {
     };
   },
   async mounted() {
-    const api = await this.$request("api");
+    const sys = wx.getSystemInfoSync();
+    console.log(sys);
+    this.carouselHeight = sys.windowWidth > 320 ? "92vw" : "94vw";
+    // const api = await this.$request("api");
   },
   computed: mapState(["userInfo"]),
 
@@ -94,15 +110,11 @@ export default {
         mpvue.switchTab({ url });
       } else {
         mpvue.navigateTo({ url });
-      }
+      }   
     },
-    clickHandle(ev) {
-      console.log("clickHandle:", ev);
-      // throw {message: 'custom test'}
-    },
-    navigateHouse(url){
-      console.log(url)
-      mpvue.navigateTo({url})
+    navigateHouse(url) {
+      console.log(url);
+      mpvue.navigateTo({ url });
     }
   },
 
@@ -119,7 +131,7 @@ export default {
   padding: 40rpx 0 20rpx 0;
   background: #fff;
   .index-title {
-    padding: 40rpx;
+    padding: 50rpx;
     display: flex;
     justify-content: space-between;
   }
@@ -131,30 +143,33 @@ export default {
   }
 }
 
-.carousel-card {
-  overflow: hidden;
-  margin: 0 auto;
-  width: 95%;
-  background: #fff;
-  @include shadow-card;
-  height: 0;
-  padding-bottom: 55%;
-  img {
-    width: 100%;
+.carousel {
+  //min-height: 85vw;
+  .carousel-card {
+    overflow: hidden;
+    margin: 0 auto;
+    width: 95%;
+    background: #fff;
+    @include shadow-card;
+    height: 0;
+    padding-bottom: 65%;
+    img {
+      width: 100%;
+    }
   }
-}
-.carousel-desc {
-  padding: 0 20rpx;
-  .address {
-    color: $font-color;
-    padding: 24rpx 0;
-  }
-  .desc {
-    display: flex;
-    justify-content: space-between;
-    .status {
+  .carousel-desc {
+    padding: 0 30rpx;
+    .address {
       color: $font-color;
-      font-weight: bold;
+      padding: 24rpx 0;
+    }
+    .desc {
+      display: flex;
+      justify-content: space-between;
+      .status {
+        color: $font-color;
+        font-weight: bold;
+      }
     }
   }
 }
