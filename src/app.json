@@ -2,12 +2,13 @@
   "pages": [
     "pages/index/main",
     "pages/housedetail/main",
-    "pages/myself/main"
+    "pages/myself/main",
+    "pages/stafflist/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Areal 房产管理",
+    "navigationBarTitleText": "澳睿集团业主客户端",
     "navigationBarTextStyle": "black"
   },
   "tabBar":{

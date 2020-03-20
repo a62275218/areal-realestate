@@ -37,11 +37,11 @@ export default {
   height: 100%;
   min-height: 100vh;
   .center-content {
-    width: 90%;
+    width: 80%;
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate3d(-50%, -100%, 0);
+    transform: translate3d(-50%, -50%, 0);
   }
 }
 </style>

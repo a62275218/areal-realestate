@@ -1,8 +1,9 @@
 <template>
   <div class="bg">
-    <div class="top-card">
+    <div class="top-card" v-if="houseList">
       <div class="index-title">
         <div>我的物业</div>
+        <image src="/static/images/green-logo.png" mode="widthFix" />
       </div>
       <swiper
         indicator-dots
@@ -13,39 +14,18 @@
         next-margin="30rpx"
         indicator-active-color="#1fa637"
       >
-        <swiper-item @click="navigateHouse(url)">
+        <swiper-item @click="navigateHouse(item.id)" v-for="item in houseList" :key="item.id">
           <div class="carousel-card">
-            <img src="/static/images/areal.png" />
+            <img :src="item.imgUrl[0]" />
           </div>
           <div class="carousel-desc">
-            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
-            <div class="desc">
-              <div>X房X厅X卫</div>
-              <div class="status">OWNED</div>
+            <div class="address">
+              <image src="/static/images/location.png" mode="widthFix" />
+              {{item.address}}
             </div>
-          </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="carousel-card">
-            <img src="/static/images/areal.png" />
-          </div>
-          <div class="carousel-desc">
-            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
             <div class="desc">
-              <div>X房X厅X卫</div>
-              <div class="status">OWNED</div>
-            </div>
-          </div>
-        </swiper-item>
-        <swiper-item>
-          <div class="carousel-card">
-            <img src="/static/images/areal.png" />
-          </div>
-          <div class="carousel-desc">
-            <div class="address">1038 / 33 kosdfns streest Boxhill VIC 3128</div>
-            <div class="desc">
-              <div>X房X厅X卫</div>
-              <div class="status">OWNED</div>
+              <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
+              <div class="status">分享</div>
             </div>
           </div>
         </swiper-item>
@@ -72,7 +52,6 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      url: "/pages/housedetail/main",
       carouselHeight: "",
       menuList: [
         {
@@ -97,11 +76,19 @@ export default {
   },
   async mounted() {
     const sys = wx.getSystemInfoSync();
-    console.log(sys);
     this.carouselHeight = sys.windowWidth > 320 ? "92vw" : "94vw";
-    // const api = await this.$request("api");
   },
-  computed: mapState(["userInfo"]),
+  onShow() {
+    if (!this.userInfo) {
+      mpvue.switchTab({ url: "/pages/myself/main" });
+    } else {
+      this.$store.dispatch("getUserHouse", {
+        id: this.userInfo.id
+      });
+      console.log(this);
+    }
+  },
+  computed: mapState(["userInfo", "houseList"]),
 
   methods: {
     bindViewTap() {
@@ -110,11 +97,10 @@ export default {
         mpvue.switchTab({ url });
       } else {
         mpvue.navigateTo({ url });
-      }   
+      }
     },
-    navigateHouse(url) {
-      console.log(url);
-      mpvue.navigateTo({ url });
+    navigateHouse(id) {
+      mpvue.navigateTo({ url: `/pages/housedetail/main?id=${id}` });
     }
   },
 
@@ -131,9 +117,17 @@ export default {
   padding: 40rpx 0 20rpx 0;
   background: #fff;
   .index-title {
-    padding: 50rpx;
+    padding: 50rpx 50rpx 30rpx 50rpx;
     display: flex;
     justify-content: space-between;
+    position: relative;
+    font-size: 32rpx;
+    font-weight: bold;
+    image {
+      position: absolute;
+      width: 20%;
+      bottom: 2rpx;
+    }
   }
   .more {
     text-align: center;
@@ -162,6 +156,12 @@ export default {
     .address {
       color: $font-color;
       padding: 24rpx 0;
+      display: flex;
+      align-items: center;
+      image {
+        width: 24rpx;
+        padding-right: 10rpx;
+      }
     }
     .desc {
       display: flex;

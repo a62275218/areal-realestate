@@ -1,23 +1,50 @@
-const baseUrl = 'http://192.168.14.52:6001/'
+const baseUrl = 'https://areal.weboostapp.com/api/api/v1/'
 
 export function request(url, param) {
-  console.log(baseUrl)
   return new Promise((resolve, reject) => {
+    mpvue.showLoading();
     try {
       wx.request({
         url: baseUrl + url,
+        method: param.method || 'POST',
         ...param,
-        suceess(res) {
-          console.log(res)
-          resolve(res)
+        success(res) {
+          console.log('request success:')
+          const code = getIn(res, 'data', 'code')
+          mpvue.hideLoading();
+          if (code === 0) {
+            param.successMsg &&
+              mpvue.showToast({
+                title: param.successMsg,
+                icon: "none"
+              });
+            resolve(res.data.data)
+          } else {
+            param.errorMsg &&
+              mpvue.showToast({
+                title: param.errorMsg,
+                icon: "none"
+              });
+            resolve('')
+          }
         },
         fail(err) {
-          console.log(err)
-          reject(err)
-        }
+          mpvue.hideLoading();
+          console.log('request fail:')
+          mpvue.showToast({
+            title: "服务器错误",
+            icon: "none"
+          });
+          resolve('')
+        },
       })
     } catch (err) {
-      console.log(err)
+      mpvue.hideLoading();
+      mpvue.showToast({
+        title: "服务器错误",
+        icon: "none"
+      });
+      resolve('')
     }
   })
 }
@@ -42,3 +69,31 @@ export function formatTime(date) {
   return `${t1} ${t2}`
 }
 
+export function getIn(obj, ...restParams) {
+  if (typeof (obj) === 'undefined') {
+    return null
+  }
+  const validateObj = (object, key) => {
+    return ['undefined'].indexOf(typeof (object[key])) === -1 ? object[key] : null
+  }
+  const paramLen = restParams.length
+  let currentIndex = 0,
+    currentVal = validateObj(obj, restParams[currentIndex])
+  if (!restParams.length) {
+    return obj
+  }
+
+  while (currentVal !== null) {
+    // 如果已经是最后一层结构，直接返回
+    if (currentIndex === paramLen - 1) {
+      return currentVal
+    }
+    // 如果不是最后一层且值存在，进行深层判断
+    if (currentVal !== null) {
+      currentIndex++
+      currentVal = validateObj(currentVal, restParams[currentIndex])
+    } else {
+      return null
+    }
+  }
+}

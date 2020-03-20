@@ -9,7 +9,7 @@ export default {
      * 百度：mpvue === swan, mpvuePlatform === 'swan'
      * 支付宝(蚂蚁)：mpvue === my, mpvuePlatform === 'my'
      */
-
+    this.$store.commit('retriveUser')
     let logs;
     if (mpvuePlatform === "my") {
       logs = mpvue.getStorageSync({ key: "logs" }).data || [];
@@ -26,7 +26,7 @@ export default {
   },
   log() {
     console.log(`log at:${Date.now()}`);
-  }
+  },
 };
 </script>
 
