@@ -74,6 +74,13 @@
 					"pathName": "pages/stafflist/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/about/main",
+					"pathName": "pages/about/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
