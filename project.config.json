@@ -81,6 +81,33 @@
 					"pathName": "pages/about/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/bill/main",
+					"pathName": "pages/bill/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/document/main",
+					"pathName": "pages/document/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wuye/main",
+					"pathName": "pages/wuye/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/wuyeindex/main",
+					"pathName": "pages/wuyeindex/main",
+					"scene": null
 				}
 			]
 		}

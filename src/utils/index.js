@@ -9,10 +9,10 @@ export function request(url, param) {
         method: param.method || 'POST',
         ...param,
         success(res) {
-          console.log('request success:')
           const code = getIn(res, 'data', 'code')
           mpvue.hideLoading();
           if (code === 0) {
+            console.log(param)
             param.successMsg &&
               mpvue.showToast({
                 title: param.successMsg,

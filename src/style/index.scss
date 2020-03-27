@@ -4,6 +4,8 @@ $font-color: #1fa637;
 $gray-color: rgb(188, 188, 188);
 $dark-gray-color: rgb(126, 126, 126);
 $bg-color: rgb(239, 239, 239);
+$warn-color: rgb(226, 46, 46);
+$orange-color: rgb(255 , 187, 33);
 $normal-font-size: 28rpx;
 
 page {
@@ -48,6 +50,10 @@ page {
   .right {
     width: 200rpx;
   }
+}
+
+.large-gap{
+  height:300rpx;
 }
 
 .gap {

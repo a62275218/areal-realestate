@@ -55,20 +55,21 @@ export default {
       carouselHeight: "",
       menuList: [
         {
-          img: "/static/images/Component6.png",
+          img: "/static/images/zujin.png",
           content: "租金一览",
-          url: "/pages/housedetail/main"
+          url: "/pages/bill/main"
         },
         {
-          img: "/static/images/Component4.png",
-          content: "账单明细"
+          img: "/static/images/doc.png",
+          content: "相关文件",
+          url: "/pages/document/main"
         },
         {
-          img: "/static/images/Component4.png",
+          img: "/static/images/wuye.png",
           content: "物业维护"
         },
         {
-          img: "/static/images/Component4.png",
+          img: "/static/images/lixing.png",
           content: "例行检查"
         }
       ]
@@ -101,6 +102,9 @@ export default {
     },
     navigateHouse(id) {
       mpvue.navigateTo({ url: `/pages/housedetail/main?id=${id}` });
+    },
+    navigate(url) {
+      mpvue.navigateTo({ url });
     }
   },
 

@@ -3,7 +3,7 @@ import App from './App'
 import store from './store'
 import md5 from 'md5'
 import { mapState } from "vuex";
-import { request, getIn } from '@/utils'
+import { request, getIn } from '@/utils';
 
 Vue.config.productionTip = false
 App.mpType = 'app'

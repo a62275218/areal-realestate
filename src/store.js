@@ -12,7 +12,10 @@ const store = new Vuex.Store({
   state: {
     userInfo: false,
     houseList: [],
-    staffList: []
+    staffList: [],
+    showFilter: false,
+    tipShow:false,
+    activeIndex:0
   },
   actions: {
     userLogin: async ({ state, commit }, payload) => {
@@ -37,7 +40,7 @@ const store = new Vuex.Store({
       }
     },
     getUserHouse: async ({ state }, payload) => {
-      const { id } = payload
+      const { id,callback } = payload
       const houseList = await request("fetchUserHouseById", {
         data: {
           id
@@ -45,6 +48,7 @@ const store = new Vuex.Store({
       })
       if (houseList) {
         state.houseList = houseList
+        callback && callback()
       }
     },
     fetchAllStaff: async ({ state }) => {
@@ -65,13 +69,21 @@ const store = new Vuex.Store({
       }
     },
     updateUser: (state, newUser) => {
-      console.log(newUser)
       state.userInfo = newUser;
       mpvue.setStorageSync('userInfo', newUser)
     },
     userLogout: state => {
       state.userInfo = false;
       mpvue.removeStorageSync('userInfo')
+    },
+    toggleFilterList:state=>{
+      state.showFilter = !state.showFilter
+    },
+    searchChange:(state,index)=>{
+     state.activeIndex = index
+    },
+    showTip:state=>{
+      state.tipShow = true
     }
   },
   plugins: debug ? [createLogger()] : []

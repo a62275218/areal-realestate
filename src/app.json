@@ -4,7 +4,11 @@
     "pages/housedetail/main",
     "pages/myself/main",
     "pages/stafflist/main",
-    "pages/about/main"
+    "pages/about/main",
+    "pages/bill/main",
+    "pages/document/main",
+    "pages/wuyeindex/main",
+    "pages/wuye/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -32,9 +32,8 @@ export default {
 .mask {
   z-index: 100;
   background: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  position: fixed;
   width: 100%;
-  height: 100%;
   min-height: 100vh;
   .center-content {
     width: 80%;
