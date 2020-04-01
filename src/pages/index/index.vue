@@ -1,5 +1,7 @@
 <template>
   <div class="bg">
+    <StaffBtn />
+    <ServiceBtn />
     <div class="top-card" v-if="houseList">
       <div class="index-title">
         <div>我的物业</div>
@@ -9,12 +11,13 @@
         indicator-dots
         circular
         class="carousel"
+        @change="handleSwiperChange"
         :style="'min-height:'+carouselHeight"
         previous-margin="30rpx"
         next-margin="30rpx"
         indicator-active-color="#1fa637"
       >
-        <swiper-item @click="navigateHouse(item.id)" v-for="item in houseList" :key="item.id">
+        <swiper-item @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
           <div class="carousel-card">
             <img :src="item.imgUrl[0]" />
           </div>
@@ -30,12 +33,17 @@
           </div>
         </swiper-item>
       </swiper>
-      <div class="more">查看房源列表 >></div>
+      <div class="more" @click="navigate('/pages/houselist/main')">查看房源列表 >></div>
     </div>
     <div class="gap"></div>
     <div class="white-card menu">
-      <div class="menu-item" v-for="(item,idx) in menuList" :key="idx" @click="navigate(item.url)">
-        <image :src="item.img" alt mode="widthFix" />
+      <div
+        :class="item.active?'menu-item active':'menu-item'"
+        v-for="(item,idx) in menuList"
+        :key="idx"
+        @click="navigateItem({item,idx})"
+      >
+        <image :src="item.active?item.activeImg:item.img" alt mode="widthFix" />
         <div>{{item.content}}</div>
       </div>
     </div>
@@ -43,11 +51,14 @@
       <div>微信公众号: xxxxxxxxxxxxxxxx</div>
       <div>澳瑞网站: www.areal.com</div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import ServiceBtn from "@/components/servicebtn";
+import StaffBtn from "@/components/staffbtn";
 
 export default {
   data() {
@@ -56,24 +67,34 @@ export default {
       menuList: [
         {
           img: "/static/images/zujin.png",
+          activeImg: "/static/images/zujin-active.png",
           content: "租金一览",
           url: "/pages/bill/main"
         },
         {
           img: "/static/images/doc.png",
+          activeImg: "/static/images/doc-active.png",
           content: "相关文件",
           url: "/pages/document/main"
         },
         {
           img: "/static/images/wuye.png",
-          content: "物业维护"
+          activeImg: "/static/images/wuye-active.png",
+          content: "物业维护",
+          url: "/pages/wuyeindex/main"
         },
         {
           img: "/static/images/lixing.png",
-          content: "例行检查"
+          activeImg: "/static/images/lixing-active.png",
+          content: "例行检查",
+          url: "/pages/checklist/main"
         }
       ]
     };
+  },
+  components: {
+    ServiceBtn,
+    StaffBtn
   },
   async mounted() {
     const sys = wx.getSystemInfoSync();
@@ -100,11 +121,22 @@ export default {
         mpvue.navigateTo({ url });
       }
     },
+    handleSwiperChange(e){
+      this.$store.commit("searchChange", e.mp.detail.current);
+    },
     navigateHouse(id) {
       mpvue.navigateTo({ url: `/pages/housedetail/main?id=${id}` });
     },
     navigate(url) {
       mpvue.navigateTo({ url });
+    },
+    navigateItem({ item, idx }) {
+      const list = this.menuList;
+      list.forEach((tab, i) => {
+        tab.active = i === idx;
+      });
+      this.menuList = list.reverse().reverse();
+      mpvue.navigateTo({ url: item.url });
     }
   },
 
@@ -181,6 +213,9 @@ export default {
 .menu {
   display: flex;
   flex-wrap: wrap;
+  .active {
+    color: $font-color !important;
+  }
   .menu-item {
     width: 50%;
     border: 2rpx solid $bg-color;

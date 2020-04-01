@@ -63,7 +63,7 @@
         </div>
         <div class="flex-between info-row">
           <div>租金支付日期</div>
-          <div>{{houseDetail.tenantInfo.paymentDate}}</div>
+          <div>{{formatDate(houseDetail.tenantInfo.paymentDate)}}</div>
         </div>
         <div class="flex-between info-row">
           <div>租约结束日期</div>
@@ -116,9 +116,6 @@ export default {
   onShow() {
     const { id } = this.$root.$mp.query;
     this.houseDetail = this.$store.state.houseList.find(item => {
-      item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
-      item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate)
-      item.tenantInfo.lastRiseRentalDate = formatDate(item.tenantInfo.lastRiseRentalDate)
       return item.id == id;
     });
   },

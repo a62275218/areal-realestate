@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "WeChat",
+  "usingComponents": {
+    "painter": "/static/painter/painter"
+  }
+}

@@ -117,12 +117,15 @@ export default {
     }
   },
   async onShow() {
+    this.$store.commit("searchChange", 0);
     this.getDateRange();
     this.$store.dispatch("getUserHouse", {
-      id: this.$store.state.userInfo.id
+      id: this.$store.state.userInfo.id,
+      callback: () => {
+        this.getFilterInfo();
+      }
     });
     this.getTotalInfo();
-    this.getFilterInfo();
   },
   methods: {
     async handleSearchChange(item) {

@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <StaffBtn />
+    <StaffBtn v-if="userInfo" />
     <ServiceBtn />
     <CustomModal :visible="modifyModalShow" :onClose="()=>this.modifyModalShow=false">
       <CustomDialog
@@ -11,6 +11,7 @@
         @cancel="()=>this.modifyModalShow=false"
       ></CustomDialog>
     </CustomModal>
+
     <div v-if="userInfo">
       <div class="top-card">
         <div class="avatar">
@@ -31,7 +32,7 @@
       </div>
       <div class="gap"></div>
       <div class="white-card">
-        <div class="row" v-for="(item,idx) in menu2" :key="idx">
+        <div class="row" v-for="(item,idx) in menu2" :key="idx" @click="navigate(item.url)">
           <div>{{item.title}}</div>
           <div>
             <i class="iconfont icon-iconfontjiantou2"></i>
@@ -57,7 +58,7 @@
               placeholder-class="placeholder"
               v-model="password"
             />
-            <span class="right-btn">忘记密码</span>
+            <div class="right-btn" style="z-index:100;" @click="forgetPsw">忘记密码</div>
           </div>
         </div>
       </div>
@@ -88,6 +89,7 @@ export default {
       account: "bleve",
       password: "1",
       modifyModalShow: false,
+      resetModalShow: false,
       modifyContent: "",
       originalInfo: "",
       modifyTitle: "",
@@ -113,11 +115,11 @@ export default {
       menu2: [
         {
           title: "我的消息",
-          url: ""
+          url: "/pages/paybill/main"
         },
         {
           title: "支付账单",
-          url: ""
+          url: "/pages/paybill/main"
         }
       ]
     };
@@ -136,8 +138,21 @@ export default {
         password: this.password
       });
     },
+    forgetPsw() {
+      this.modifyTitle = "重置密码";
+      this.modifyModalShow = true;
+      this.dialogType = "input";
+      this.originalInfo = "请输入用户名";
+      this.modifyKey = "resetPsw";
+      return;
+      this.$request("postResendPasswordByUsername");
+    },
     logout() {
       this.$store.commit("userLogout");
+    },
+    navigate(url) {
+      console.log(url);
+      mpvue.navigateTo({ url });
     },
     showModal(title) {
       switch (title) {
@@ -169,6 +184,15 @@ export default {
           title: "请输入内容",
           icon: "none"
         });
+        return;
+      }
+      if (this.modifyKey === "resetPsw") {
+        const sendMail = await this.$request("postResendPasswordByUsername", {
+          data: {
+            username: input
+          }
+        });
+        console.log(sendMail)
         return;
       }
       if (this.modifyKey === "email") {

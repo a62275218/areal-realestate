@@ -1,6 +1,6 @@
 <template>
   <div v-if="modalShow" class="mask" @click="closeModal">
-    <div class="center-content" @click.stop>
+    <div class="center-content" @click.stop :style="customStyle">
       <slot></slot>
     </div>
   </div>
@@ -13,7 +13,7 @@ export default {
       modalShow: false
     };
   },
-  props: ["visible","onClose"],
+  props: ["visible", "onClose", "customStyle"],
   watch: {
     visible: function(val) {
       this.modalShow = val;
@@ -22,7 +22,7 @@ export default {
   methods: {
     closeModal() {
       this.modalShow = false;
-      this.onClose()
+      this.onClose();
     }
   }
 };

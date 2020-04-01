@@ -63,15 +63,15 @@
         </div>
         <div class="flex-between info-row">
           <div>租金支付日期</div>
-          <div>{{houseDetail.tenantInfo.paymentDate}}</div>
+          <div>${{houseDetail.tenantInfo.paymentDate}}</div>
         </div>
         <div class="flex-between info-row">
           <div>租约结束日期</div>
-          <div>{{houseDetail.tenantInfo.endDate}}</div>
+          <div>${{houseDetail.tenantInfo.endDate}}</div>
         </div>
         <div class="flex-between info-row">
           <div>最后一次租金上调日期</div>
-          <div>{{houseDetail.tenantInfo.lastRiseRentalDate}}</div>
+          <div>${{houseDetail.tenantInfo.lastRiseRentalDate}}</div>
         </div>
       </div>
       <div class="card-info">
@@ -102,7 +102,6 @@
 import CustomModal from "@/components/custommodal";
 import CustomDialog from "@/components/dialog";
 import NameCard from "@/components/namecard";
-import { formatDate } from "@/utils/index";
 export default {
   data() {
     return {
@@ -110,20 +109,16 @@ export default {
       houseValueModalShow: false,
       houseValueContent: "是否需要免费房屋价值评估服务？",
       visitCardShow: false,
-      houseDetail: false,
+      houseDetail: false
     };
   },
   onShow() {
     const { id } = this.$root.$mp.query;
     this.houseDetail = this.$store.state.houseList.find(item => {
-      item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
-      item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate)
-      item.tenantInfo.lastRiseRentalDate = formatDate(item.tenantInfo.lastRiseRentalDate)
       return item.id == id;
     });
   },
   methods: {
-    formatDate,
     showCard(info) {
       this.nameCardShow = true;
       this.info = info;

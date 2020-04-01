@@ -60,6 +60,10 @@ page {
   height: 10rpx;
 }
 
+.page-gap {
+  height: 20rpx;
+}
+
 @mixin shadow-card {
   border-radius: 20rpx;
   box-shadow: 0 12rpx 10rpx rgba(0, 0, 0, 0.6);

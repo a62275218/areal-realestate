@@ -107,6 +107,27 @@
 					"id": -1,
 					"name": "pages/wuyeindex/main",
 					"pathName": "pages/wuyeindex/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/checklist/main",
+					"pathName": "pages/checklist/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/paybill/main",
+					"pathName": "pages/paybill/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/about/main",
+					"pathName": "pages/about/main",
 					"scene": null
 				}
 			]

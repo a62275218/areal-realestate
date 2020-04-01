@@ -2,6 +2,7 @@
   <div class="white-card dialog">
     <div class="title" v-if="title">{{title}}</div>
     <div class="content">
+      <div class="text" v-if="content">{{content}}</div>
       <input
         v-if="type==='input'"
         type="text"
@@ -28,7 +29,7 @@
 
 <script>
 export default {
-  props: ["title", "type", "placeholder"],
+  props: ["title", "type", "placeholder", "content"],
   data() {
     return {
       input: ""
@@ -60,6 +61,10 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    .text{
+      color:$dark-gray-color;
+      font-size:32rpx;
+    }
     .dialog-input {
       margin: 0 auto;
       height: 50rpx;
@@ -67,9 +72,9 @@ export default {
       width: 70%;
       border-bottom: 2rpx solid $bg-color;
     }
-    .textarea{
+    .textarea {
       height: 150rpx;
-      border-bottom:none;
+      border-bottom: none;
     }
   }
   .bottom-control {

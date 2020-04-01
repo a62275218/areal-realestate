@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
-    <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false">
-      <NameCard :info="info" id="dddd" />
+    <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
+      <NameCard :info="info"/>
     </CustomModal>
     <div v-for="item in staffList" :key="item" @imgOK="onImgOk">
       <div class="gap"></div>
@@ -10,7 +10,7 @@
           <image :src="item.avatarUrl" />
         </div>
         <div class="center">
-          <div class="card-title">{{item.occupation}}</div>
+          <div class="card-title">{{item.subTitle}}</div>
           <div>{{item.name}}</div>
         </div>
         <div class="right">
@@ -32,6 +32,24 @@ export default {
   },
   data() {
     return {
+      template: {
+        background: "#eee",
+        width: "654rpx",
+        height: "400rpx",
+        borderRadius: "20rpx",
+        views: [
+          {
+            type: "text",
+            text: "酷家乐 移动前端",
+            css: {
+              left: "50rpx",
+              top: "48rpx",
+              fontSize: "40rpx",
+              align: "left"
+            }
+          },
+        ]
+      },
       nameCardShow: false,
       info: false
     };

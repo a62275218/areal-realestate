@@ -75,7 +75,8 @@ export function formatDate(input) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`
+  console.log(`${year}-${month}-${day}`)
+  return `${year}-${month}-${day}`
 }
 
 export function getIn(obj, ...restParams) {
