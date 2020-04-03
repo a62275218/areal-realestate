@@ -1,6 +1,7 @@
 <template>
   <div class="bg">
     <div class="top">
+      <image src="/static/images/white-logo.png" mode="widthFix" style="width:40%;" />
       <div class="intro">
         <div
           v-for="(item,index) in navbar"
@@ -12,30 +13,18 @@
     </div>
     <div v-if="navbar[0].active">
       <div class="swiper">
-        <swiper indicator-dots circular style="min-height:580rpx" indicator-active-color="#1fa637">
-          <swiper-item v-for="item in []" :key="item">
-            <image class="full-img" :src="item" mode="heightFix" />
+        <swiper indicator-dots circular style="min-height:450rpx" indicator-active-color="#1fa637">
+          <swiper-item v-for="item in aboutImg" :key="item">
+            <image style="width:100%" :src="item.url" mode="aspectFill" />
           </swiper-item>
         </swiper>
       </div>
-      <div class="white-card description">
-        <div
-          class="paragraph"
-        >在Areal，我们致力于通过提供真正一流的物业管理体验来使我们的品牌与众不同。无论您居住在澳洲本地还是海外，拥有澳大利亚住宅投资物业都应该简单且在经济上有所回报。</div>
-        <div
-          class="paragraph"
-        >
-        我们渴望以出色的客户服务和即时的沟通而闻名。并相信这将使我们在未来五年内成为领先的澳大利亚房地产公司，并在未来成为标志性的国际品牌。</div>
-        作为专业的房产公司，为本地和国际住宅投资者提供及时、优质的服务是我们唯一的重点。我们的使命是通过为业主提供高质量的服务，从而不断扩展我们管理的物业规模。
-        我们很理解房东的难处，尤其如果您是一位海外投资者，持续确保投资物业的获利性是需要耗费大量时间和精力的，我们的行业经验和对卓越服务的承诺使得我们有能力代您照管您的物业，而您可以专注于扩大您的投资组合。
-        Areal团队高度关注客户。我们欢迎房东和租户的反馈，并使用此反馈不断改善我们的服务质量。我们利用各项在线服务来确保在您需要时可以随时与我们联系，并且我们的移动客户端使您可以随时随地查看您的财产信息。
-        要获得更高级别的物业管理经验，请将您的投资委托给Areal。
-      </div>
+      <div v-html="aboutText"></div>
     </div>
     <div v-if="navbar[1].active">
       <div class="white-card namecard" v-for="item in staffList" :key="item">
         <div class="avatar">
-          <image :src="item.avatarUrl" mode="widthFix" />
+          <image :src="item.avatarUrl" mode="aspectFill" />
         </div>
         <div class="title">{{item.subTitle}}</div>
         <div class="name">{{item.name}}</div>
@@ -53,6 +42,7 @@
         </div>
       </div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
@@ -61,6 +51,8 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      aboutImg: [],
+      aboutText: "",
       navbar: [
         {
           title: "关于澳睿",
@@ -73,9 +65,14 @@ export default {
       ]
     };
   },
-  onShow() {
+  async onLoad() {
     this.$store.dispatch("fetchAllStaff");
+    const aboutContent = await this.$request("fetchAllAboutDetail");
+    const { aboutImg, aboutText } = aboutContent;
+    this.aboutImg = aboutImg;
+    this.aboutText = `<div class="white-card description">${aboutText}</div>`;
   },
+  async initData() {},
   computed: mapState(["staffList"]),
   methods: {
     switchActive(index) {
@@ -94,13 +91,26 @@ export default {
 
 <style lang="scss">
 .description {
-  padding: 40rpx;
+  padding: 80rpx 60rpx 60rpx 60rpx;
+}
+.swiper {
+  border-radius: 20rpx;
+  margin-bottom: -20rpx;
+  overflow: hidden;
+  background: $bg-color;
 }
 .top {
   background: $font-color;
-  height: 300rpx;
-  margin-bottom: -20rpx;
+  height: 350rpx;
+  margin-bottom: -40rpx;
+  padding-top: 80rpx;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  image {
+    margin: 0 auto;
+  }
   .intro {
     position: absolute;
     bottom: 100rpx;

@@ -1,29 +1,36 @@
 <template>
-  <div class="carousel">
-    <div @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
-      <div class="carousel-card">
-        <img :src="item.imgUrl[0]" />
-      </div>
-      <div class="carousel-desc">
-        <div class="address">
-          <image src="/static/images/location.png" mode="widthFix" />
-          {{item.address}}
+  <div>
+    <NavBar title="澳睿集团业主客户端"/>
+    <div class="carousel">
+      <div @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
+        <div class="carousel-card">
+          <iamge style="width:100%" :src="item.imgUrl[0]" mode="aspectFill" />
         </div>
-        <div class="desc">
-          <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
-          <div class="status">分享</div>
+        <div class="carousel-desc">
+          <div class="address">
+            <image src="/static/images/location.png" mode="widthFix" />
+            {{item.address}}
+          </div>
+          <div class="desc">
+            <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
+            <div class="status">分享</div>
+          </div>
         </div>
+        <div class="page-gap"></div>
       </div>
       <div class="page-gap"></div>
     </div>
-    <div class="page-gap"></div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import NavBar from "@/components/navbar";
 export default {
   computed: mapState(["userInfo", "houseList"]),
+  components:{
+    NavBar
+  },
   methods: {
     navigateHouse(id) {
       mpvue.navigateTo({ url: `/pages/housedetail/main?id=${id}` });
@@ -42,10 +49,7 @@ export default {
     background: #fff;
     @include shadow-card;
     height: 0;
-    padding-bottom: 65%;
-    img {
-      width: 100%;
-    }
+    padding-bottom: 62%;
   }
   .carousel-desc {
     padding: 0 30rpx;

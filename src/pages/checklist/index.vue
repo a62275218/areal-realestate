@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="例行检查" />
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
     <div class="gap"></div>
     <div class="white-card">
@@ -16,6 +17,7 @@
 <script>
 import { mapState } from "vuex";
 import FilterBar from "@/components/filterbar";
+import NavBar from "@/components/navbar";
 export default {
   data() {
     return {
@@ -48,12 +50,15 @@ export default {
     });
   },
   methods: {
-    navigate(item){
-      mpvue.navigateTo({ url: `/pages/checklistdetail/main?name=${item.name}` });
-    },
+    navigate(item) {
+      mpvue.navigateTo({
+        url: `/pages/checklistdetail/main?name=${item.name}`
+      });
+    }
   },
   components: {
-    FilterBar
+    FilterBar,
+    NavBar
   },
   computed: {
     ...mapState(["houseList", "activeIndex"])
@@ -62,8 +67,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row{
-  padding:30rpx 50rpx 30rpx 30rpx !important;
+.row {
+  padding: 30rpx 50rpx 30rpx 30rpx !important;
 }
 .date-picker {
   color: $dark-gray-color;

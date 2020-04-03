@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar :title="navTitle" />
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
     <div class="gap"></div>
     <div class="white-card">
@@ -62,6 +63,7 @@
 <script>
 import { mapState } from "vuex";
 import FilterBar from "@/components/filterbar";
+import NavBar from "@/components/navbar";
 export default {
   data() {
     return {
@@ -71,6 +73,8 @@ export default {
     };
   },
   onShow() {
+    const { name } = this.$root.$mp.query;
+    this.navTitle = name
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
       callback: () => {
@@ -82,7 +86,8 @@ export default {
     });
   },
   components: {
-    FilterBar
+    FilterBar,
+    NavBar
   },
   computed: {
     ...mapState(["houseList", "activeIndex"])

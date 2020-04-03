@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="物业维护"/>
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
     <div class="none" v-if="!urgentList.length && !pendingList.length">暂无项目需要维修</div>
     <div v-else>
@@ -18,7 +19,7 @@
         >
           <block v-for="(image,idx) in item.img" :key="idx">
             <swiper-item>
-              <image style="width:100%;" mode="widthFix" :src="image" />
+              <image style="width:100%;" mode="aspectFill" :src="image" />
             </swiper-item>
           </block>
         </swiper>
@@ -53,6 +54,7 @@
 
 <script>
 import { mapState } from "vuex";
+import NavBar from "@/components/navbar";
 import FilterBar from "@/components/filterbar";
 export default {
   data() {
@@ -65,7 +67,8 @@ export default {
     ...mapState(["houseList", "activeIndex"])
   },
   components: {
-    FilterBar
+    FilterBar,
+    NavBar
   },
   async onShow() {
     this.$store.dispatch("getUserHouse", {
@@ -101,7 +104,7 @@ export default {
               id: item.id,
               status: requestStatus
             },
-            successMsg:'处理成功'
+            successMsg: "处理成功"
           }
         );
         this.getFilterInfo();
@@ -147,7 +150,7 @@ export default {
 }
 .navigate {
   margin-top: 40rpx;
-  border-radius:30rpx;
+  border-radius: 30rpx;
   margin-bottom: 40rpx;
   font-size: 28rpx;
   width: 300rpx;

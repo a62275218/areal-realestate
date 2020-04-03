@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="支付账单"/>
     <ServiceBtn />
     <FilterBar
       :list="newHouseList"
@@ -61,6 +62,7 @@
 <script>
 import FilterBar from "@/components/filterbar";
 import { mapState } from "vuex";
+import NavBar from "@/components/navbar";
 import ServiceBtn from "@/components/servicebtn";
 export default {
   data() {
@@ -82,7 +84,8 @@ export default {
   },
   components: {
     FilterBar,
-    ServiceBtn
+    ServiceBtn,
+    NavBar
   },
   onShow() {
     this.$store.dispatch("getUserHouse", {

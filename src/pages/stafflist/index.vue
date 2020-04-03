@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="澳睿集团业主客户端"/>
     <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
       <NameCard :info="info"/>
     </CustomModal>
@@ -25,10 +26,12 @@
 import { mapState } from "vuex";
 import CustomModal from "@/components/custommodal";
 import NameCard from "@/components/namecard";
+import NavBar from "@/components/navbar";
 export default {
   components: {
     CustomModal,
-    NameCard
+    NameCard,
+    NavBar
   },
   data() {
     return {

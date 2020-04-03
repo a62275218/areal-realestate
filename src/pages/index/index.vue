@@ -2,6 +2,7 @@
   <div class="bg">
     <StaffBtn />
     <ServiceBtn />
+    <NavBar title="澳睿集团业主客户端" />
     <div class="top-card" v-if="houseList">
       <div class="index-title">
         <div>我的物业</div>
@@ -17,9 +18,9 @@
         next-margin="30rpx"
         indicator-active-color="#1fa637"
       >
-        <swiper-item @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
-          <div class="carousel-card">
-            <img :src="item.imgUrl[0]" />
+        <swiper-item v-for="item in houseList" :key="item">
+          <div class="carousel-card" @click="navigateHouse(item.id)">
+            <image style="width:100%;" :src="item.imgUrl[0]" mode="aspectFill" />
           </div>
           <div class="carousel-desc">
             <div class="address">
@@ -28,7 +29,9 @@
             </div>
             <div class="desc">
               <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
-              <div class="status">分享</div>
+              <div class="status">
+                户主
+              </div>
             </div>
           </div>
         </swiper-item>
@@ -59,6 +62,7 @@
 import { mapState } from "vuex";
 import ServiceBtn from "@/components/servicebtn";
 import StaffBtn from "@/components/staffbtn";
+import NavBar from "@/components/navbar";
 
 export default {
   data() {
@@ -94,11 +98,12 @@ export default {
   },
   components: {
     ServiceBtn,
-    StaffBtn
+    StaffBtn,
+    NavBar
   },
   async mounted() {
     const sys = wx.getSystemInfoSync();
-    this.carouselHeight = sys.windowWidth > 320 ? "92vw" : "94vw";
+    this.carouselHeight = sys.windowWidth > 320 ? "90vw" : "93vw";
   },
   onShow() {
     if (!this.userInfo) {
@@ -121,7 +126,7 @@ export default {
         mpvue.navigateTo({ url });
       }
     },
-    handleSwiperChange(e){
+    handleSwiperChange(e) {
       this.$store.commit("searchChange", e.mp.detail.current);
     },
     navigateHouse(id) {
@@ -182,10 +187,7 @@ export default {
     background: #fff;
     @include shadow-card;
     height: 0;
-    padding-bottom: 65%;
-    img {
-      width: 100%;
-    }
+    padding-bottom: 62%;
   }
   .carousel-desc {
     padding: 0 30rpx;

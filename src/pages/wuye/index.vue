@@ -1,8 +1,11 @@
 <template>
   <div class="bg">
+    <NavBar title="物业维护"/>
     <CustomModal :visible="confirmModalShow" :onClose="()=>this.confirmModalShow=false">
       <CustomDialog
-        @confirm="handleModify"
+        content="确定同意这个报价吗?"
+        :emphasize="`报价: ${agreePrice}`"
+        @confirm="handleConfirmPrice"
         @cancel="()=>this.confirmModalShow=false"
       ></CustomDialog>
     </CustomModal>
@@ -43,6 +46,11 @@
               <div class="status processing" v-if="quote.status ==='处理中'">
                 <div class="round" />
                 <div>处理中</div>
+                <div class="inprogress">正在积极为您处理请耐心等待</div>
+              </div>
+              <div class="status done" v-if="quote.status ==='已完成'">
+                <div class="round" />
+                <div>已完成</div>
               </div>
             </div>
             <div class="price" v-if="quote.status ==='待同意'">报价: ${{quote.price}}</div>
@@ -50,7 +58,7 @@
             <div class="description">{{quote.description}}</div>
             <div class="agree" v-if="quote.status ==='待同意'">
               <div class="left"></div>
-              <div class="white-btn">同意报价</div>
+              <div class="white-btn" @click="showConfirmMoal({item,quote})">同意报价</div>
             </div>
           </div>
         </div>
@@ -73,11 +81,13 @@ import { mapState } from "vuex";
 import FilterBar from "@/components/filterbar";
 import CustomDialog from "@/components/dialog";
 import CustomModal from "@/components/custommodal";
+import NavBar from "@/components/navbar";
 export default {
   data() {
     return {
+      requestQuote: "",
       maintainList: [],
-      confirmModalShow:false,
+      confirmModalShow: false,
       tabbar: [
         {
           name: "最新详情",
@@ -124,7 +134,8 @@ export default {
   components: {
     FilterBar,
     CustomDialog,
-    CustomModal
+    CustomModal,
+    NavBar
   },
   onShow() {
     this.$store.dispatch("getUserHouse", {
@@ -138,6 +149,33 @@ export default {
     });
   },
   methods: {
+    showConfirmMoal(param) {
+      const { quote, item } = param;
+      this.requestQuote = param;
+      this.agreePrice = "$" + quote.price;
+      this.confirmModalShow = true;
+    },
+    handleConfirmPrice() {
+      this.changeStatus();
+    },
+    async changeStatus() {
+      console.log(this.requestQuote);
+      if (this.requestQuote) {
+        const { quote, item } = this.requestQuote;
+        const changeStatusRes = await this.$request(
+          "postModifyMaintainStatus",
+          {
+            data: {
+              id: item.id,
+              qutoId: quote.id,
+              status: "已批准"
+            },
+            successMsg: "处理成功"
+          }
+        );
+        this.getFilterInfo();
+      }
+    },
     handleActive(index) {
       this.tabbar.forEach(item => {
         item.active = false;
@@ -271,7 +309,7 @@ export default {
     padding: 30rpx 0;
     width: 100%;
     display: flex;
-    color: $gray-color;
+    color: $dark-gray-color;
     justify-content: space-between;
     .pending {
       color: $warn-color;
@@ -284,6 +322,26 @@ export default {
         background: $orange-color;
       }
       color: $orange-color;
+    }
+    .done {
+      .round {
+        background: $font-color;
+      }
+      color: $font-color;
+    }
+    .processing {
+      position: relative;
+      .inprogress {
+        position: absolute;
+        bottom: -30rpx;
+        right: 0;
+        width: 500rpx;
+        text-align: right;
+      }
+      .round {
+        background: rgb(25, 202, 255);
+      }
+      color: rgb(25, 202, 255);
     }
     .status {
       display: flex;
@@ -300,13 +358,13 @@ export default {
   .price {
     color: $warn-color;
   }
-  .approve-price{
+  .approve-price {
     color: $orange-color;
-    text-align:right;
+    text-align: right;
   }
   .description {
     padding: 30rpx 0;
-    color: $gray-color;
+    color: $dark-gray-color;
   }
   .agree {
     display: flex;

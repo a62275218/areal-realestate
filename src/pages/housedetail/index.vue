@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="澳睿集团业主客户端" />
     <CustomModal :visible="houseValueModalShow" :onClose="()=>this.houseValueModalShow=false">
       <CustomDialog
         :content="houseValueContent"
@@ -17,7 +18,7 @@
     <div class="top-card">
       <swiper indicator-dots circular style="min-height:580rpx" indicator-active-color="#1fa637">
         <swiper-item v-for="item in houseDetail.imgUrl" :key="item">
-          <image class="full-img" :src="item" mode="heightFix" />
+          <image class="full-img" :src="item" mode="aspectFill" />
         </swiper-item>
       </swiper>
       <div class="carousel-desc">
@@ -82,17 +83,20 @@
       </div>
     </div>
     <div class="gap"></div>
-    <div class="white-card name-card" v-for="item in houseDetail.staffs" :key="item">
-      <div class="avatar">
-        <image :src="item.avatarUrl" />
+    <div v-for="item in houseDetail.staffs" :key="item">
+      <div class="white-card name-card">
+        <div class="avatar">
+          <image :src="item.avatarUrl" />
+        </div>
+        <div class="center">
+          <div class="card-title">{{item.subTitle}}</div>
+          <div>{{item.name}}</div>
+        </div>
+        <div class="right">
+          <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
+        </div>
       </div>
-      <div class="center">
-        <div class="card-title">{{item.subTitle}}</div>
-        <div>{{item.name}}</div>
-      </div>
-      <div class="right">
-        <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
-      </div>
+      <div class="gap"></div>
     </div>
     <div class="page-gap"></div>
   </div>
@@ -103,6 +107,7 @@ import CustomModal from "@/components/custommodal";
 import CustomDialog from "@/components/dialog";
 import NameCard from "@/components/namecard";
 import { formatDate } from "@/utils/index";
+import NavBar from "@/components/navbar";
 export default {
   data() {
     return {
@@ -110,15 +115,17 @@ export default {
       houseValueModalShow: false,
       houseValueContent: "是否需要免费房屋价值评估服务？",
       visitCardShow: false,
-      houseDetail: false,
+      houseDetail: false
     };
   },
   onShow() {
     const { id } = this.$root.$mp.query;
     this.houseDetail = this.$store.state.houseList.find(item => {
       item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
-      item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate)
-      item.tenantInfo.lastRiseRentalDate = formatDate(item.tenantInfo.lastRiseRentalDate)
+      item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate);
+      item.tenantInfo.lastRiseRentalDate = formatDate(
+        item.tenantInfo.lastRiseRentalDate
+      );
       return item.id == id;
     });
   },
@@ -141,7 +148,8 @@ export default {
   components: {
     CustomModal,
     CustomDialog,
-    NameCard
+    NameCard,
+    NavBar
   }
 };
 </script>

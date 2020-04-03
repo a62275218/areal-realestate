@@ -115,7 +115,7 @@ export default {
       menu2: [
         {
           title: "我的消息",
-          url: "/pages/paybill/main"
+          url: "/pages/message/main"
         },
         {
           title: "支付账单",

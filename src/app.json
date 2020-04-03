@@ -12,13 +12,15 @@
     "pages/checklist/main",
     "pages/checklistdetail/main",
     "pages/houselist/main",
-    "pages/paybill/main"
+    "pages/paybill/main",
+    "pages/message/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#1fa637",
     "navigationBarTitleText": "澳睿集团业主客户端",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
   },
   "tabBar":{
     "selectedColor":"#1fa637",

@@ -14,8 +14,9 @@ const store = new Vuex.Store({
     houseList: [],
     staffList: [],
     showFilter: false,
-    tipShow:false,
-    activeIndex:0
+    tipShow: false,
+    activeIndex: 0,
+    navBarHeight: 0
   },
   actions: {
     userLogin: async ({ state, commit }, payload) => {
@@ -39,8 +40,15 @@ const store = new Vuex.Store({
         commit('updateUser', userInfo)
       }
     },
+    setNavbarHeight: async ({ state }) => {
+      let systemInfo = wx.getSystemInfoSync()
+      let platformReg = /ios/i;
+      state.titleBarHeight = platformReg.test(systemInfo.platform) ? 44 : 48;
+      state.statusBarHeight = systemInfo.statusBarHeight;
+      console.log(state)
+    },
     getUserHouse: async ({ state }, payload) => {
-      const { id,callback } = payload
+      const { id, callback } = payload
       const houseList = await request("fetchUserHouseById", {
         data: {
           id
@@ -76,13 +84,13 @@ const store = new Vuex.Store({
       state.userInfo = false;
       mpvue.removeStorageSync('userInfo')
     },
-    toggleFilterList:state=>{
+    toggleFilterList: state => {
       state.showFilter = !state.showFilter
     },
-    searchChange:(state,index)=>{
-     state.activeIndex = index
+    searchChange: (state, index) => {
+      state.activeIndex = index
     },
-    showTip:state=>{
+    showTip: state => {
       state.tipShow = true
     }
   },

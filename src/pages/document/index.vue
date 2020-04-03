@@ -1,5 +1,6 @@
 <template>
   <div class="bg">
+    <NavBar title="相关文件" />
     <CustomModal :visible="tipVisible" :onClose="()=>this.tipVisible=false">
       <div class="white-card tip">
         <image class="icon-question" mode="widthFix" src="/static/images/question.png" />澳大利亚财政年度是每年的7月1日到第二年的6月30日
@@ -67,6 +68,7 @@ import FilterBar from "@/components/filterbar";
 import { mapState } from "vuex";
 import { formatTime } from "@/utils/index";
 import CustomModal from "@/components/custommodal";
+import NavBar from "@/components/navbar";
 export default {
   data() {
     return {
@@ -82,7 +84,8 @@ export default {
   },
   components: {
     FilterBar,
-    CustomModal
+    CustomModal,
+    NavBar
   },
   computed: {
     ...mapState(["houseList", "activeIndex"])

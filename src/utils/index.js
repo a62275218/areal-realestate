@@ -6,25 +6,26 @@ export function request(url, param) {
     try {
       wx.request({
         url: baseUrl + url,
-        method: param.method || 'POST',
+        method: param ? param.method || 'POST' : 'POST',
         ...param,
         success(res) {
           const code = getIn(res, 'data', 'code')
           mpvue.hideLoading();
           if (code === 0) {
-            console.log(param)
-            param.successMsg &&
+            if (param && param.successMsg) {
               mpvue.showToast({
                 title: param.successMsg,
                 icon: "none"
               });
+            }
             resolve(res.data.data || res.data)
           } else {
-            param.errorMsg &&
+            if (param && param.errorMsg) {
               mpvue.showToast({
                 title: param.errorMsg,
                 icon: "none"
               });
+            }
             resolve('')
           }
         },
@@ -40,6 +41,7 @@ export function request(url, param) {
       })
     } catch (err) {
       console.log('catched errro')
+      console.log(err)
       mpvue.hideLoading();
       mpvue.showToast({
         title: "服务器错误",
@@ -75,7 +77,7 @@ export function formatDate(input) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
 }
 
 export function getIn(obj, ...restParams) {

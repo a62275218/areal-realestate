@@ -3,6 +3,7 @@
     <div class="title" v-if="title">{{title}}</div>
     <div class="content">
       <div class="text" v-if="content">{{content}}</div>
+      <div class="emphasize" v-if="emphasize">{{emphasize}}</div>
       <input
         v-if="type==='input'"
         type="text"
@@ -29,7 +30,7 @@
 
 <script>
 export default {
-  props: ["title", "type", "placeholder", "content"],
+  props: ["title", "type", "placeholder", "content", "emphasize"],
   data() {
     return {
       input: ""
@@ -55,15 +56,23 @@ export default {
     color: $dark-gray-color;
     font-size: 36rpx;
   }
+
   .content {
     flex: 1;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    .text{
-      color:$dark-gray-color;
-      font-size:32rpx;
+    position:relative;
+    .emphasize {
+      position:absolute;
+      bottom:60rpx;
+      color: $warn-color !important;
+      font-size: 32rpx;
+    }
+    .text {
+      color: $dark-gray-color;
+      font-size: 32rpx;
     }
     .dialog-input {
       margin: 0 auto;
