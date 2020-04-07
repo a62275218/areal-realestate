@@ -40,12 +40,21 @@ const store = new Vuex.Store({
         commit('updateUser', userInfo)
       }
     },
+    fetchUserInfo: async ({ state, commit }, payload) => {
+      const { id } = payload;
+      const userInfo = await request("fetchUserByUserId", {
+        data: { id },
+        hideLoading: true
+      })
+      if (userInfo) {
+        commit('updateUser', userInfo)
+      }
+    },
     setNavbarHeight: async ({ state }) => {
       let systemInfo = wx.getSystemInfoSync()
       let platformReg = /ios/i;
       state.titleBarHeight = platformReg.test(systemInfo.platform) ? 44 : 48;
       state.statusBarHeight = systemInfo.statusBarHeight;
-      console.log(state)
     },
     getUserHouse: async ({ state }, payload) => {
       const { id, callback } = payload
@@ -63,7 +72,6 @@ const store = new Vuex.Store({
       const staffList = await request("fetchstaffList", {
         data: {}
       })
-      console.log(staffList)
       if (staffList) {
         state.staffList = staffList
       }

@@ -28,12 +28,13 @@
         </div>
         <div class="desc">
           <div>{{houseDetail.houseDetail.roomNumber || 0}}房{{houseDetail.houseDetail.hallNumber || 0}}厅{{houseDetail.houseDetail.bathNumber || 0}}卫</div>
+          <button open-type="share" class="share-btn">分享</button>
         </div>
       </div>
     </div>
     <div class="gap"></div>
     <div class="white-card">
-      <div class="header">
+      <div class="header" v-if="!share">
         <!-- <div class="avatar">
           <img src="/static/images/areal.png" />
         </div>
@@ -41,8 +42,8 @@
           <div>物业主管</div>
           <div>John Smith 张小明</div>
         </div>-->
-        <div class="green-btn inline-btn" @click="()=>this.houseValueModalShow = true">免费房屋价值评估服务</div>
-        <div class="white-btn inline-btn" @click="()=>this.visitCardShow = true">免费租金评估服务</div>
+        <div class="green-btn inline-btn" @click="showSendReuqest('是否需要免费房屋价值评估服务？')">免费房屋价值评估服务</div>
+        <div class="white-btn inline-btn" @click="showSendReuqest('是否需要免费租金评估服务？')">免费租金评估服务</div>
       </div>
       <div class="card-info">
         <div class="info-row card-title">租户信息</div>
@@ -113,13 +114,15 @@ export default {
     return {
       nameCardShow: false,
       houseValueModalShow: false,
+      share: false,
       houseValueContent: "是否需要免费房屋价值评估服务？",
       visitCardShow: false,
       houseDetail: false
     };
   },
   onShow() {
-    const { id } = this.$root.$mp.query;
+    const { id, type } = this.$root.$mp.query;
+    this.share = type === "share";
     this.houseDetail = this.$store.state.houseList.find(item => {
       item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
       item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate);
@@ -129,20 +132,45 @@ export default {
       return item.id == id;
     });
   },
+  onShareAppMessage() {
+    const { id } = this.$root.$mp.query;
+    return {
+      title: "房源分享",
+      path: `/pages/housedetail/main?id=${id}&type=share`,
+      success: res => {},
+      fail: () => {},
+      complete: () => {}
+    };
+  },
   methods: {
     formatDate,
     showCard(info) {
       this.nameCardShow = true;
       this.info = info;
     },
+    showSendReuqest(request) {
+      this.houseValueContent = request;
+      this.houseValueModalShow = true;
+    },
     async sendHouseValueReq() {
-      const reqRes = await this.$request("requestHouseValueAssessmentById", {
+      const req =
+        this.houseValueContent === "是否需要免费房屋价值评估服务？"
+          ? "requestHouseValueAssessmentById"
+          : "requestRentalAssessmentById";
+      if(this.houseValueContent === "您的申请已成功发出，我们的团队会尽快联系您"){
+        this.houseValueModalShow = false;
+        return;
+      }
+      const reqRes = await this.$request(req, {
         data: {
           id: this.houseDetail.id,
-          errorMsg: "申请失败"
+          errorMsg: "申请失败",
+          successMsg:'申请成功'
         }
       });
-      console.log(reqRes);
+      if(reqRes && reqRes.code == 0){
+        this.houseValueContent = "您的申请已成功发出，我们的团队会尽快联系您"
+      }
     }
   },
   components: {
@@ -155,6 +183,20 @@ export default {
 </script>
 
 <style lang="scss">
+.share-btn {
+  color: $font-color;
+  border: none;
+  background: transparent;
+  border-color: transparent;
+  font-size: 30rpx;
+  font-weight: bold;
+  line-height: normal;
+  padding: 0;
+  margin: 0;
+  &::after {
+    border: none;
+  }
+}
 .top-card {
   border-bottom-left-radius: 20rpx;
   border-bottom-right-radius: 20rpx;

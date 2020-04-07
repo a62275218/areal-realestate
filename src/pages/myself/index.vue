@@ -34,7 +34,11 @@
       <div class="white-card">
         <div class="row" v-for="(item,idx) in menu2" :key="idx" @click="navigate(item.url)">
           <div>{{item.title}}</div>
-          <div>
+          <div style="display:flex;align-items:center;">
+            <i
+              class="uncheck"
+              v-if="idx === 0?userInfo.uncheckedMsgNum:userInfo.uncheckedPaymentNum"
+            >{{idx === 0?userInfo.uncheckedMsgNum:userInfo.uncheckedPaymentNum}}</i>
             <i class="iconfont icon-iconfontjiantou2"></i>
           </div>
         </div>
@@ -49,7 +53,7 @@
         <div class="login">
           <div class="input">
             <input type="text" placeholder="输入账号" placeholder-class="placeholder" v-model="account" />
-            <span class="right-btn">忘记账号</span>
+            <!-- <span class="right-btn">忘记账号</span> -->
           </div>
           <div class="input">
             <input
@@ -68,6 +72,7 @@
         <div>澳睿网站: www.areal.com.au</div>
       </div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
@@ -131,6 +136,14 @@ export default {
       backgroundColor: "#1fa637"
     });
   },
+  onShow() {
+    if (this.userInfo) {
+      this.$store.dispatch("fetchUserInfo", {
+        id: this.userInfo.id
+      });
+    }
+    console.log(this.userInfo);
+  },
   methods: {
     async handleLogin() {
       this.$store.dispatch("userLogin", {
@@ -144,14 +157,11 @@ export default {
       this.dialogType = "input";
       this.originalInfo = "请输入用户名";
       this.modifyKey = "resetPsw";
-      return;
-      this.$request("postResendPasswordByUsername");
     },
     logout() {
       this.$store.commit("userLogout");
     },
     navigate(url) {
-      console.log(url);
       mpvue.navigateTo({ url });
     },
     showModal(title) {
@@ -190,9 +200,10 @@ export default {
         const sendMail = await this.$request("postResendPasswordByUsername", {
           data: {
             username: input
-          }
+          },
+          successMsg:'发送成功',
+          errorMsg:'发送失败'
         });
-        console.log(sendMail)
         return;
       }
       if (this.modifyKey === "email") {
@@ -231,6 +242,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.uncheck {
+  margin-right: 20rpx;
+  width: 30rpx;
+  height: 30rpx;
+  color: #fff;
+  border-radius: 50%;
+  line-height: 30rpx;
+  text-align: center;
+  font-size: 22rpx;
+  background: $warn-color;
+}
 .top-card {
   padding: 120rpx 60rpx;
   background: $font-color;

@@ -65,16 +65,22 @@ export default {
       ]
     };
   },
-  async onLoad() {
-    this.$store.dispatch("fetchAllStaff");
-    const aboutContent = await this.$request("fetchAllAboutDetail");
-    const { aboutImg, aboutText } = aboutContent;
-    this.aboutImg = aboutImg;
-    this.aboutText = `<div class="white-card description">${aboutText}</div>`;
+  mounted() {
+    this.initData();
   },
-  async initData() {},
   computed: mapState(["staffList"]),
   methods: {
+    async initData() {
+      this.$store.dispatch("fetchAllStaff");
+      const aboutContent = await this.$request("fetchAllAboutDetail",{
+        data:{
+          
+        }
+      });
+      const { aboutImg, aboutText } = aboutContent;
+      this.aboutImg = aboutImg;
+      this.aboutText = `<div class="white-card description">${aboutText}</div>`;
+    },
     switchActive(index) {
       const navbar = this.navbar;
       navbar.forEach((item, idx) => {

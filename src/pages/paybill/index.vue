@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="支付账单"/>
+    <NavBar title="支付账单" />
     <ServiceBtn />
     <FilterBar
       :list="newHouseList"
@@ -48,14 +48,20 @@
     </div>
     <div class="page-gap"></div>
     <div v-for="item in paymentList" :key="item">
-      <div class="white-card billcard">
+      <div class="white-card billcard" v-if="item.active">
         <div class="title">{{item.address}}</div>
         <div class="content">{{item.description}}</div>
         <div class="price">${{item.price}}</div>
-        <div class="green-btn">扫码支付</div>
+        <div v-if="item.status==='待支付'" class="green-btn" @click="scanCode(item.id)">扫码支付</div>
+        <div v-else-if="item.status==='已成功'" class="white-btn">支付成功</div>
+        <div v-else-if="item.status==='确认中'">
+          <div class="white-btn pending-btn">正在后台审核</div>
+          <div class="green-btn" @click="scanCode(item.id)">重新支付</div>
+        </div>
       </div>
       <div class="page-gap"></div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
@@ -117,7 +123,19 @@ export default {
       this.endDate = e.mp.detail.value;
       this.getFilterInfo();
     },
+    scanCode(id) {
+      mpvue.previewImage({
+        urls: ['https://areal.weboostapp.com/image/arealpay.png'] 
+      });
+      this.$request('postChangePaymentStatusByPaymentId',{
+        data:{
+          id,
+          status:'确认中'
+        }
+      })
+    },
     async getFilterInfo() {
+      console.log(this.searchID);
       const requestParam = this.searchID
         ? {
             id: this.userInfo.id,
@@ -138,13 +156,17 @@ export default {
               ? Date.parse(new Date(this.endDate)) / 1000
               : Date.parse(new Date()) / 1000
           };
-      const paymentList = await this.$request("fetchPaymentByUserId", {
+      let paymentList = await this.$request("fetchPaymentByUserId", {
         data: requestParam
       });
+      console.log(paymentList);
       paymentList.forEach(item => {
         item.address = this.houseList.find(i => {
           return i.id === item.belongHouseId;
         }).address;
+        item.active =
+          (item.status === "已成功" && this.tabbar[1].active) ||
+          (item.status !== "已成功" && this.tabbar[0].active);
       });
       console.log(paymentList);
       this.paymentList = paymentList;
@@ -232,5 +254,13 @@ export default {
     padding: 20rpx 0;
     font-weight: bold;
   }
+}
+.white-btn {
+  padding: 14rpx 44rpx;
+}
+.pending-btn {
+  margin-bottom: 20rpx;
+  color: $orange-color;
+  border-color: $orange-color;
 }
 </style>

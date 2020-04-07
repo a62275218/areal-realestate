@@ -29,16 +29,19 @@
             </div>
             <div class="desc">
               <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
-              <div class="status">
-                户主
-              </div>
+              <div class="status">户主</div>
             </div>
           </div>
         </swiper-item>
       </swiper>
       <div class="more" @click="navigate('/pages/houselist/main')">查看房源列表 >></div>
     </div>
-    <div class="gap"></div>
+    <div class="page-gap"></div>
+    <div class="msg-box" v-if="message" @click="navigate('/pages/message/main')">
+      {{message}}
+      <i class="right-arrow">></i>
+    </div>
+    <div class="page-gap"></div>
     <div class="white-card menu">
       <div
         :class="item.active?'menu-item active':'menu-item'"
@@ -51,7 +54,7 @@
       </div>
     </div>
     <div class="footer">
-      <div>微信公众号: xxxxxxxxxxxxxxxx</div>
+      <div>微信公众号: ArealPropertyGroup</div>
       <div>澳瑞网站: www.areal.com</div>
     </div>
     <div class="large-gap"></div>
@@ -112,10 +115,16 @@ export default {
       this.$store.dispatch("getUserHouse", {
         id: this.userInfo.id
       });
-      console.log(this);
     }
   },
-  computed: mapState(["userInfo", "houseList"]),
+  computed: {
+    ...mapState(["userInfo", "houseList"]),
+    message() {
+      return this.$store.state.userInfo.uncheckedMsgNum
+        ? `您有${this.$store.state.userInfo.uncheckedMsgNum}条新消息`
+        : "";
+    }
+  },
 
   methods: {
     bindViewTap() {
@@ -175,6 +184,23 @@ export default {
     color: $gray-color;
     font-size: 24rpx;
     padding: 20rpx;
+  }
+}
+
+.msg-box {
+  width: 85%;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  padding: 10rpx 0;
+  border-radius: 20rpx;
+  background: rgba(31, 166, 55, 0.2);
+  color: $font-color;
+  .right-arrow {
+    position: absolute;
+    right: 20rpx;
+    top: 50%;
+    transform: translate(0, -50%);
   }
 }
 

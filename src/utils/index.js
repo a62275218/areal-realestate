@@ -1,8 +1,11 @@
 const baseUrl = 'https://areal.weboostapp.com/api/api/v1/'
 
 export function request(url, param) {
+  const { hideLoading } = param
   return new Promise((resolve, reject) => {
-    mpvue.showLoading();
+    if (!hideLoading) {
+      mpvue.showLoading();
+    }
     try {
       wx.request({
         url: baseUrl + url,

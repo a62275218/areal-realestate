@@ -63,6 +63,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding:80rpx;
     position:relative;
     .emphasize {
       position:absolute;

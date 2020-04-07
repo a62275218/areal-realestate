@@ -39,12 +39,6 @@
         "selectedIconPath":"/static/images/about-active.png"
       },
       {
-        "pagePath":"pages/about/main",
-        "text":"房产百科",
-        "iconPath":"/static/images/baike.png",
-        "selectedIconPath":"/static/images/baike-active.png"
-      },
-      {
         "pagePath":"pages/myself/main",
         "text":"个人中心",
         "iconPath":"/static/images/my.png",
