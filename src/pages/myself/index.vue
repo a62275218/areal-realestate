@@ -50,6 +50,8 @@
     </div>
     <div v-else>
       <div class="top-bg">
+        <image class="logo" src="/static/images/logo.png" mode="widthFix" />
+        <image style="width:100%;" src="/static/images/login-bg.png" mode="widthFix" />
         <div class="login">
           <div class="input">
             <input type="text" placeholder="输入账号" placeholder-class="placeholder" v-model="account" />
@@ -91,8 +93,8 @@ export default {
   },
   data() {
     return {
-      account: "bleve",
-      password: "1",
+      account: "",
+      password: "",
       modifyModalShow: false,
       resetModalShow: false,
       modifyContent: "",
@@ -201,8 +203,8 @@ export default {
           data: {
             username: input
           },
-          successMsg:'发送成功',
-          errorMsg:'发送失败'
+          successMsg: "发送成功",
+          errorMsg: "发送失败"
         });
         return;
       }
@@ -303,6 +305,13 @@ export default {
   border-bottom-left-radius: 20rpx;
   border-bottom-right-radius: 20rpx;
   position: relative;
+  .logo {
+    position: absolute;
+    top: 130rpx;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
   .login {
     position: absolute;
     bottom: -140rpx;
