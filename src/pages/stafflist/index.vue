@@ -19,6 +19,7 @@
         </div>
       </div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
@@ -90,6 +91,7 @@ export default {
   margin: 0 auto;
   padding: 20rpx 40rpx;
   display: flex;
+  word-break: break-all;
   .center {
     .card-title {
       color: $dark-gray-color;

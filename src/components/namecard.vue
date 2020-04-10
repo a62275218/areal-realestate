@@ -1,17 +1,44 @@
 <template>
-  <div>
-    <painter :customStyle="customStyle" @imgOK="onImgOk" :palette="template" />
-    <div class="green-btn save-card" @click="saveNameCard">保存名片</div>
+  <div class="card">
+    <painter :palette="template" />
+    <painter :palette="btnTemplate" :customStyle="customStyle" @click="saveNameCard" />
+    <painter
+      customStyle="position:fixed;bottom:-1000vh;"
+      @imgOK="onImgOk"
+      :palette="template"
+      widthPixels="680"
+    />
   </div>
 </template>
 
 <script>
+import { downloadFile } from "@/utils";
 export default {
   props: ["info"],
   data() {
     return {
-      imgPath:'',
-      customStyle: "margin:0 auto",
+      imgPath: "",
+      customStyle: "margin:30rpx auto;",
+      btnTemplate: {
+        background: "#1fa637",
+        width: "200rpx",
+        height: "70rpx",
+        borderRadius: "10rpx",
+        views: [
+          {
+            type: "text",
+            text: "保存名片",
+            css: {
+              color:'#fff',
+              width: "200rpx",
+              lineHeight:'70rpx',
+              textAlign:'center',
+              top:'14rpx',
+              fontSize: "30rpx",
+            }
+          }
+        ]
+      },
       template: {
         background: "#fff",
         width: "680rpx",
@@ -26,7 +53,7 @@ export default {
               left: "40rpx",
               width: "120rpx",
               height: "120rpx",
-              borderRadius:'120rpx'
+              borderRadius: "120rpx"
             }
           },
           {
@@ -35,7 +62,9 @@ export default {
             css: {
               top: "42rpx",
               left: "230rpx",
-              fontSize:'30rpx'
+              fontSize: "30rpx",
+              width: "344rpx",
+              whiteSpace: "break-all"
             }
           },
           {
@@ -44,7 +73,7 @@ export default {
             css: {
               top: "92rpx",
               left: "230rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
           {
@@ -53,55 +82,55 @@ export default {
             css: {
               top: "132rpx",
               left: "230rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
           {
             type: "text",
-            text: 'M',
+            text: "M",
             css: {
               top: "230rpx",
               left: "296rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
           {
             type: "text",
-            text: 'T',
+            text: "T",
             css: {
               top: "280rpx",
               left: "298rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
           {
             type: "text",
-            text: 'E',
+            text: "E",
             css: {
               top: "330rpx",
               left: "298rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
           {
             type: "text",
-            text: 'A',
+            text: "A",
             css: {
               top: "380rpx",
               left: "298rpx",
-              fontSize:'26rpx'
+              fontSize: "26rpx"
             }
           },
-           {
+          {
             type: "text",
             text: this.info.mobile,
             css: {
               top: "230rpx",
               left: "330rpx",
-              fontSize:'26rpx',
-              width:'344rpx',
-              color:'rgb(31,166,55)',
-              whiteSpace:'break-all'
+              fontSize: "26rpx",
+              width: "344rpx",
+              color: "rgb(31,166,55)",
+              whiteSpace: "break-all"
             }
           },
           {
@@ -110,10 +139,10 @@ export default {
             css: {
               top: "280rpx",
               left: "330rpx",
-              fontSize:'26rpx',
-              width:'344rpx',
-              color:'rgb(31,166,55)',
-              whiteSpace:'break-all'
+              fontSize: "26rpx",
+              width: "344rpx",
+              color: "rgb(31,166,55)",
+              whiteSpace: "break-all"
             }
           },
           {
@@ -122,10 +151,10 @@ export default {
             css: {
               top: "330rpx",
               left: "330rpx",
-              fontSize:'26rpx',
-              width:'344rpx',
-              color:'rgb(31,166,55)',
-              whiteSpace:'break-all'
+              fontSize: "26rpx",
+              width: "344rpx",
+              color: "rgb(31,166,55)",
+              whiteSpace: "break-all"
             }
           },
           {
@@ -134,10 +163,10 @@ export default {
             css: {
               top: "380rpx",
               left: "330rpx",
-              fontSize:'26rpx',
-              width:'344rpx',
-              color:'rgb(31,166,55)',
-              whiteSpace:'break-all'
+              fontSize: "26rpx",
+              width: "344rpx",
+              color: "rgb(31,166,55)",
+              whiteSpace: "break-all"
             }
           },
           {
@@ -152,7 +181,7 @@ export default {
           },
           {
             type: "image",
-            url: '/static/images/logo.png',
+            url: "/static/images/logo.png",
             css: {
               top: "320rpx",
               left: "40rpx",
@@ -165,29 +194,59 @@ export default {
     };
   },
   methods: {
-    onImgOk(e){
-      console.log('pl')
-      console.log(e.mp.detail.path)
-      this.imgPath = e.mp.detail.path
+    onImgOk(e) {
+      this.imgPath = e.mp.detail.path;
     },
     saveNameCard() {
-      console.log(this.imgPath)
-      mpvue.previewImage({
-        urls: [this.imgPath] //需要预览的图片链接列表,
+      console.log("save");
+      mpvue.getSetting({
+        success: res => {
+          console.log(res);
+          if (res.authSetting["scope.writePhotosAlbum"]) {
+            mpvue.showLoading({
+              title: "保存中"
+            });
+            mpvue.saveImageToPhotosAlbum({
+              filePath: this.imgPath, //图片文件路径，可以是临时文件路径也可以是永久文件路径，不支持网络图片路径,
+              success: res => {
+                mpvue.showToast({
+                  title: "保存名片成功"
+                });
+              },
+              fail: err => {
+                console.log(err);
+                mpvue.showToast({
+                  title: "保存名片失败",
+                  icon: "none"
+                });
+              },
+              complete: () => {}
+            });
+          } else if (res.authSetting["scope.writePhotosAlbum"] === false) {
+            console.log("未授权");
+            mpvue.openSetting();
+          }
+        }
       });
-      return
-      mpvue.saveImageToPhotosAlbum({
-        filePath: this.imgPath, //图片文件路径，可以是临时文件路径也可以是永久文件路径，不支持网络图片路径,
-        success: res => {},
-        fail: () => {},
-        complete: () => {}
-      });
+      // return;
+      // mpvue.previewImage({
+      //   urls: [this.imgPath] //需要预览的图片链接列表,
+      // });
     }
   }
 };
 </script>
 
 <style lang="scss">
+.card {
+  .save-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 30rpx auto 0;
+    z-index: 9999999999999999999999999999999999;
+  }
+}
 .header {
   display: flex;
   padding: 30rpx 60rpx;
@@ -217,8 +276,5 @@ export default {
       color: $gray-color;
     }
   }
-}
-.save-card {
-  margin: 30rpx auto 0;
 }
 </style>    

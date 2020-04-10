@@ -17,7 +17,7 @@
       >{{item.name}}</div>
     </div>
     <div class="page-gap"></div>
-    <div class="white-card">
+    <div class="white-card" v-if="tabbar[1].active">
       <div class="date-picker">
         <div style="min-width:110rpx;">查找日期</div>
         <div class="search-row">
@@ -93,6 +93,10 @@ export default {
     ServiceBtn,
     NavBar
   },
+  onUnload() {
+    this.startDate = "";
+    this.endDate = "";
+  },
   onShow() {
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
@@ -108,6 +112,12 @@ export default {
     }
   },
   methods: {
+    async handleSearchChange(item) {
+      this.startDate = "";
+      this.endDate = "";
+      this.searchID = item.id || "";
+      this.getFilterInfo();
+    },
     handleActive(index) {
       this.tabbar.forEach(item => {
         item.active = false;
@@ -125,41 +135,37 @@ export default {
     },
     scanCode(id) {
       mpvue.previewImage({
-        urls: ['https://areal.weboostapp.com/image/arealpay.png'] 
+        urls: ["https://areal.weboostapp.com/image/arealpay.png"]
       });
-      this.$request('postChangePaymentStatusByPaymentId',{
-        data:{
+      this.$request("postChangePaymentStatusByPaymentId", {
+        data: {
           id,
-          status:'确认中'
+          status: "确认中"
         }
-      })
+      });
     },
     async getFilterInfo() {
-      console.log(this.searchID);
+      const startTime = this.startDate
+        ? Date.parse(new Date(this.startDate)) / 1000
+        : 0;
+      const endTime = this.endDate
+        ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
+        : (Date.parse(new Date()) + 86400000) / 1000;
       const requestParam = this.searchID
         ? {
             id: this.userInfo.id,
-            houseid: this.searchID,
-            startTime: this.startDate
-              ? Date.parse(new Date(this.startDate)) / 1000
-              : 0,
-            endTime: this.endDate
-              ? Date.parse(new Date(this.endDate)) / 1000
-              : Date.parse(new Date()) / 1000
+            houseId: this.searchID,
+            startTime,
+            endTime
           }
         : {
             id: this.userInfo.id,
-            startTime: this.startDate
-              ? Date.parse(new Date(this.startDate)) / 1000
-              : 0,
-            endTime: this.endDate
-              ? Date.parse(new Date(this.endDate)) / 1000
-              : Date.parse(new Date()) / 1000
+            startTime,
+            endTime
           };
-      let paymentList = await this.$request("fetchPaymentByUserId", {
+      let paymentList = await this.$request("fetchPaymentByHouseIdWithTime", {
         data: requestParam
       });
-      console.log(paymentList);
       paymentList.forEach(item => {
         item.address = this.houseList.find(i => {
           return i.id === item.belongHouseId;

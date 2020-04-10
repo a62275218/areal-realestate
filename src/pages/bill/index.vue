@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="租金一览"/>
+    <NavBar title="租金一览" />
     <CustomModal :visible="tipVisible" :onClose="()=>this.tipVisible=false">
       <div class="white-card tip">
         <image class="icon-question" mode="widthFix" src="/static/images/question.png" />澳大利亚财政年度是每年的7月1日到第二年的6月30日
@@ -81,7 +81,7 @@
         </div>
         <div class="row bottom">
           <div class="subtitle">本月租金盈余</div>
-          <div class="number">$23321</div>
+          <div class="number">${{item.income}}</div>
         </div>
       </div>
     </div>
@@ -119,6 +119,10 @@ export default {
       return [{ address: "全部房屋" }].concat(this.houseList);
     }
   },
+  onUnload() {
+    this.startDate = "";
+    this.endDate = "";
+  },
   async onShow() {
     this.$store.commit("searchChange", 0);
     this.getDateRange();
@@ -132,16 +136,28 @@ export default {
   },
   methods: {
     async handleSearchChange(item) {
+      this.startDate = "";
+      this.endDate = "";
       this.searchID = item.id || "";
       this.getFilterInfo();
     },
     async getTotalInfo() {
+      const beforeFinancialYear =
+        Date.parse(new Date()) < Date.parse(new Date().getFullYear() - 1, 7, 1);
+      const startTime = beforeFinancialYear
+        ? Date.parse(new Date(new Date().getFullYear() - 1, 7, 1)) / 1000
+        : Date.parse(new Date(new Date().getFullYear(), 7, 1)) / 1000;
+      const endTime = beforeFinancialYear
+        ? (Date.parse(new Date(new Date().getFullYear(), 6, 30)) + 86400000) /
+          1000
+        : (Date.parse(new Date(new Date().getFullYear() + 1, 6, 30)) +
+            86400000) /
+          1000;
       const rentalInfo = await this.$request("fetchRentalByUserIdWithTime", {
         data: {
           id: this.$store.state.userInfo.id,
-          startTime:
-            Date.parse(new Date(new Date().getFullYear() - 1, 7, 1)) / 1000,
-          endTime: Date.parse(new Date(new Date().getFullYear(), 6, 30)) / 1000
+          startTime,
+          endTime
         }
       });
       let income = 0,
@@ -171,59 +187,54 @@ export default {
       this.getFilterInfo();
     },
     async getFilterInfo() {
-      const hasDateRange = this.startDate && this.endDate;
+      const startTime = this.startDate
+        ? Date.parse(new Date(this.startDate)) / 1000
+        : 0;
+      const endTime = this.endDate
+        ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
+        : (Date.parse(new Date()) + 86400000) / 1000;
       if (!this.searchID) {
-        if (hasDateRange) {
-          const rentalInfo = await this.$request(
-            "fetchRentalByUserIdWithTime",
-            {
-              data: {
-                id: this.$store.state.userInfo.id,
-                startTime: Date.parse(new Date(this.startDate)) / 1000,
-                endTime: Date.parse(new Date(this.endDate)) / 1000
-              }
+        const rentalInfo = await this.$request("fetchRentalByUserIdWithTime", {
+          data: {
+            id: this.$store.state.userInfo.id,
+            startTime,
+            endTime
+          }
+        });
+        rentalInfo.forEach(item => {
+          let income = 0,
+            output = 0;
+          item.info.forEach(bill => {
+            if (bill.type === "收入") {
+              income += Number(bill.content);
+            } else if (bill.type === "支出") {
+              output += Number(bill.content);
             }
-          );
-          this.rentalInfo = rentalInfo;
-        } else {
-          const rentalInfo = await this.$request(
-            "fetchRentalByUserIdWithTime",
-            {
-              data: {
-                id: this.$store.state.userInfo.id,
-                startTime: 0,
-                endTime: Date.parse(new Date()) / 1000
-              }
-            }
-          );
-          this.rentalInfo = rentalInfo;
-        }
+          });
+          item.income = income - output;
+        });
+        this.rentalInfo = rentalInfo;
       } else {
-        if (hasDateRange) {
-          const rentalInfo = await this.$request(
-            "fetchRentalByHouseIdWithTime",
-            {
-              data: {
-                id: this.searchID,
-                startTime: Date.parse(new Date(this.startDate)) / 1000,
-                endTime: Date.parse(new Date(this.endDate)) / 1000
-              }
+        const rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
+          data: {
+            id: this.searchID,
+            startTime,
+            endTime
+          }
+        });
+        rentalInfo.forEach(item => {
+          let income = 0,
+            output = 0;
+          item.info.forEach(bill => {
+            if (bill.type === "收入") {
+              income += Number(bill.content);
+            } else if (bill.type === "支出") {
+              output += Number(bill.content);
             }
-          );
-          this.rentalInfo = rentalInfo;
-        } else {
-          const rentalInfo = await this.$request(
-            "fetchRentalByHouseIdWithTime",
-            {
-              data: {
-                id: this.searchID,
-                startTime: 0,
-                endTime: Date.parse(new Date()) / 1000
-              }
-            }
-          );
-          this.rentalInfo = rentalInfo;
-        }
+          });
+          item.income = income - output;
+        });
+        this.rentalInfo = rentalInfo;
       }
     },
     showTip() {

@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  props: ["title", "type", "placeholder", "content", "emphasize"],
+  props: ["title", "type", "placeholder", "content", "emphasize","hideCancel"],
   data() {
     return {
       input: ""
@@ -46,7 +46,6 @@ export default {
 
 <style lang="scss">
 .dialog {
-  height: 400rpx;
   display: flex;
   flex-direction: column;
   .title {

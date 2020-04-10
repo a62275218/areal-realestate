@@ -15,7 +15,7 @@
       <div class="swiper">
         <swiper indicator-dots circular style="min-height:450rpx" indicator-active-color="#1fa637">
           <swiper-item v-for="item in aboutImg" :key="item">
-            <image style="width:100%" :src="item.url" mode="aspectFill" />
+            <image style="width:100%;background:#fff;" :src="item.url" mode="aspectFill" />
           </swiper-item>
         </swiper>
       </div>
@@ -24,7 +24,7 @@
     <div v-if="navbar[1].active">
       <div class="white-card namecard" v-for="item in staffList" :key="item">
         <div class="avatar">
-          <image :src="item.avatarUrl" mode="aspectFill" />
+          <image :src="item.avatarUrl" style="width:100%;height:100%" />
         </div>
         <div class="title">{{item.subTitle}}</div>
         <div class="name">{{item.name}}</div>
@@ -140,6 +140,11 @@ export default {
   text-align: center;
   position: relative;
   margin-bottom: 40rpx;
+  &>div{
+    max-width:80%;
+    margin:0 auto;
+    word-break: break-all;
+  }
   .avatar {
     width: 200rpx;
     height: 200rpx;

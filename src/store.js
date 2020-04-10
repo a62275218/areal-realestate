@@ -23,7 +23,7 @@ const store = new Vuex.Store({
       const { account, password } = payload
       if (!account || !password) {
         mpvue.showToast({
-          title: "请输入用户名和密码",
+          title: "请输入账号和密码",
           icon: "none"
         });
         return;

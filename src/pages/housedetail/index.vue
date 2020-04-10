@@ -77,9 +77,9 @@
         </div>
       </div>
       <div class="card-info">
-        <div class="flex-between info-row">
-          <div>姓名</div>
-          <div>{{houseDetail.tenantInfo.name}}</div>
+        <div class="flex-between info-row" v-for="item in houseDetail.additionInfo" :key="item">
+          <div>{{item.title}}</div>
+          <div>{{item.content}}</div>
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@
         </div>
         <div class="center">
           <div class="card-title">{{item.subTitle}}</div>
-          <div>{{item.name}}</div>
+          <div style="">{{item.name}}</div>
         </div>
         <div class="right">
           <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
@@ -252,6 +252,7 @@ export default {
   padding: 20rpx 40rpx;
   display: flex;
   .center {
+    word-break: break-all;
     .card-title {
       color: $dark-gray-color;
     }

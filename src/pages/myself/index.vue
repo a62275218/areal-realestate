@@ -18,7 +18,7 @@
           <open-data type="userAvatarUrl"></open-data>
         </div>
         <div class="right-info">
-          <div>{{userInfo.id}}</div>
+          <div>用户ID {{userInfo.id}}</div>
           <div>{{userInfo.name}}</div>
         </div>
         <image class="logo" src="/static/images/Group 35.png" alt mode="widthFix" />
@@ -157,7 +157,7 @@ export default {
       this.modifyTitle = "重置密码";
       this.modifyModalShow = true;
       this.dialogType = "input";
-      this.originalInfo = "请输入用户名";
+      this.originalInfo = "请输入账号";
       this.modifyKey = "resetPsw";
     },
     logout() {
@@ -191,9 +191,25 @@ export default {
     },
     async handleModify(state) {
       const { input } = state;
+      let content;
+      switch (this.modifyKey) {
+        case "resetPsw":
+          content = "账号";
+          break;
+        case "email":
+          content = "邮箱";
+          break;
+        case "address":
+          content = "地址";
+          break;
+        case "phone":
+          content = "手机";
+          break;
+        default:
+      }
       if (!input) {
         mpvue.showToast({
-          title: "请输入内容",
+          title: `请输入${content}`,
           icon: "none"
         });
         return;
@@ -203,7 +219,7 @@ export default {
           data: {
             username: input
           },
-          successMsg: "发送成功",
+          successMsg: "已发送密码重置邮件到您的邮箱，请注意查收",
           errorMsg: "发送失败"
         });
         return;

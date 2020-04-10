@@ -80,7 +80,7 @@ export function formatDate(input) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
-  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+  return `${year}年${String(month).padStart(2, "0")}月${String(day).padStart(2, "0")}日`
 }
 
 export function getIn(obj, ...restParams) {
@@ -110,4 +110,80 @@ export function getIn(obj, ...restParams) {
       return null
     }
   }
+}
+
+export const downloadFile = (url, type) => {
+  mpvue.getSetting({
+    success: res => {
+      console.log(res)
+      if (res.authSetting['scope.writePhotosAlbum']) {
+        console.log('已授权')
+      } else if (res.authSetting['scope.writePhotosAlbum'] === false) {
+        console.log('未授权')
+        mpvue.openSetting()
+      }
+    }
+  })
+  mpvue.showLoading({
+    title: '保存中'
+  })
+  mpvue.downloadFile({
+    url,
+    success: res => {
+      console.log(res)
+      if (type == 'video') {
+        mpvue.saveVideoToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: res => {
+            mpvue.showToast({
+              title: '保存文件成功'
+            })
+          },
+          fail: () => {
+            mpvue.showToast({
+              title: '保存文件失败',
+              icon: 'none'
+            })
+          }
+        })
+      } else if (type == 'image') {
+        mpvue.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: res => {
+            mpvue.showToast({
+              title: '保存文件成功'
+            })
+          },
+          fail: (err) => {
+            console.log(err)
+            mpvue.showToast({
+              title: '保存文件失败',
+              icon: 'none'
+            })
+          }
+        })
+      } else {
+        mpvue.openDocument({
+          filePath: res.tempFilePath,
+          success: () => {
+            mpvue.showToast({
+              title: '下载文件成功'
+            })
+          },
+          fail: () => {
+            mpvue.showToast({
+              title: '下载文件失败',
+              icon: 'none'
+            })
+          }
+        })
+      }
+    },
+    fail: () => {
+      mpvue.showToast({
+        title: '下载文件失败',
+        icon: 'none'
+      })
+    }
+  })
 }

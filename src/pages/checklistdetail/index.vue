@@ -72,9 +72,13 @@ export default {
       inSpectionList: []
     };
   },
+  onUnload() {
+    this.startDate = "";
+    this.endDate = "";
+  },
   onShow() {
     const { name } = this.$root.$mp.query;
-    this.navTitle = name
+    this.navTitle = name;
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
       callback: () => {
@@ -93,6 +97,12 @@ export default {
     ...mapState(["houseList", "activeIndex"])
   },
   methods: {
+    handleSearchChange(item) {
+      this.startDate = "";
+      this.endDate = "";
+      this.searchID = item.id || "";
+      this.getFilterInfo();
+    },
     bindDateChangeStart(e) {
       this.startDate = e.mp.detail.value;
       this.getFilterInfo();
@@ -115,18 +125,20 @@ export default {
     },
     async getFilterInfo() {
       const { name } = this.$root.$mp.query;
+      const startTime = this.startDate
+        ? Date.parse(new Date(this.startDate)) / 1000
+        : 0;
+      const endTime = this.endDate
+        ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
+        : (Date.parse(new Date()) + 86400000) / 1000;
       if (this.searchID) {
         const inSpectionList = await this.$request(
           "fetchInspectionByHouseIdWithTime",
           {
             data: {
               id: this.searchID,
-              startTime: this.startDate
-                ? Date.parse(new Date(this.startDate)) / 1000
-                : 0,
-              endTime: this.endDate
-                ? Date.parse(new Date(this.endDate)) / 1000
-                : Date.parse(new Date()) / 1000
+              startTime,
+              endTime
             }
           }
         );

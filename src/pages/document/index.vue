@@ -90,6 +90,10 @@ export default {
   computed: {
     ...mapState(["houseList", "activeIndex"])
   },
+  onUnload() {
+    this.startDate = "";
+    this.endDate = "";
+  },
   onShow() {
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
@@ -103,6 +107,8 @@ export default {
   },
   methods: {
     async handleSearchChange(item) {
+      this.startDate = "";
+      this.endDate = "";
       this.searchID = item.id || "";
       this.getFilterInfo();
     },
@@ -115,34 +121,25 @@ export default {
       this.getFilterInfo();
     },
     async getFilterInfo() {
-      const hasDateRange = this.startDate && this.endDate;
+      const startTime = this.startDate
+        ? Date.parse(new Date(this.startDate)) / 1000
+        : 0;
+      const endTime = this.endDate
+        ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
+        : (Date.parse(new Date()) + 86400000) / 1000;
       if (this.searchID) {
         {
-          if (hasDateRange) {
-            const documentList = await this.$request(
-              "fetchFileByHouseIdWithTime",
-              {
-                data: {
-                  id: this.searchID,
-                  startTime: Date.parse(new Date(this.startDate)) / 1000,
-                  endTime: Date.parse(new Date(this.endDate)) / 1000
-                }
+          const documentList = await this.$request(
+            "fetchFileByHouseIdWithTime",
+            {
+              data: {
+                id: this.searchID,
+                startTime,
+                endTime
               }
-            );
-            this.documentList = documentList;
-          } else {
-            const documentList = await this.$request(
-              "fetchFileByHouseIdWithTime",
-              {
-                data: {
-                  id: this.searchID,
-                  startTime: 0,
-                  endTime: Date.parse(new Date()) / 1000
-                }
-              }
-            );
-            this.documentList = documentList;
-          }
+            }
+          );
+          this.documentList = documentList;
         }
       }
     },
@@ -150,9 +147,31 @@ export default {
       this.tipVisible = true;
     },
     previewDoc(link) {
-      mpvue.previewImage({
-        urls: [link] //需要预览的图片链接列表,
-      });
+      const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
+      if (regExp.test(link)) {
+        mpvue.showLoading({
+          title: "预览文件中"
+        });
+        mpvue.downloadFile({
+          url: link,
+          success: res => {
+            mpvue.openDocument({
+              filePath: res.tempFilePath
+            });
+            mpvue.hideLoading();
+          },
+          fail: () => {
+            mpvue.showToast({
+              title: "下载文件失败",
+              icon: "none"
+            });
+          }
+        });
+      } else {
+        mpvue.previewImage({
+          urls: [link]
+        });
+      }
     }
   }
 };
@@ -229,6 +248,7 @@ export default {
   border-bottom: 2rpx solid $bg-color !important;
   padding: 30rpx 30rpx;
   display: flex;
+  word-break: break-all;
   justify-content: space-between;
   align-items: center;
   .title {
@@ -242,6 +262,7 @@ export default {
   }
   .lookup {
     color: $font-color;
+    min-width:110rpx;
   }
 }
 

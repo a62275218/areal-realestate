@@ -24,8 +24,10 @@
           </div>
           <div class="carousel-desc">
             <div class="address">
-              <image src="/static/images/location.png" mode="widthFix" />
-              {{item.address}}
+              <div class="addimg">
+                <image src="/static/images/location.png" mode="widthFix" />
+              </div>
+              <div class="add">{{item.address}}</div>
             </div>
             <div class="desc">
               <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
@@ -149,6 +151,12 @@ export default {
       list.forEach((tab, i) => {
         tab.active = i === idx;
       });
+      setTimeout(() => {
+        list.forEach((tab, i) => {
+          tab.active = false;
+        });
+        this.menuList = list.reverse().reverse();
+      },1000);
       this.menuList = list.reverse().reverse();
       mpvue.navigateTo({ url: item.url });
     }
@@ -221,10 +229,17 @@ export default {
       color: $font-color;
       padding: 24rpx 0;
       display: flex;
-      align-items: center;
-      image {
+      word-break: break-all;
+      .addimg {
         width: 24rpx;
         padding-right: 10rpx;
+        height: 100%;
+        image {
+          width: 100%;
+        }
+      }
+      .add {
+        flex: 1;
       }
     }
     .desc {

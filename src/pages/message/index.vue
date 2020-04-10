@@ -1,10 +1,12 @@
 <template>
   <div class="bg">
     <NavBar title="澳睿集团业主客户端" />
+    <div class="title" v-if="!msgList">暂无消息</div>
     <div v-for="item in msgList" :key="item">
       <div class="title">{{item.date}}</div>
       <div class="white-card msg-card">{{item.description}}</div>
     </div>
+    <div class="large-gap"></div>
   </div>
 </template>
 
@@ -37,8 +39,11 @@ export default {
       }
     });
     msgList.forEach(item => {
-      item.date = formatDate(item.createTime);
+      item.date = formatDate(item.createTime*1000);
     });
+    msgList.sort((a,b)=>{
+      return b.createTime - a.createTime
+    })
     this.msgList = msgList;
     console.log(msgList);
   }
