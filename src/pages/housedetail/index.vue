@@ -6,6 +6,7 @@
         :content="houseValueContent"
         @confirm="sendHouseValueReq"
         @cancel="()=>this.houseValueModalShow=false"
+        :hideCancel="true"
       ></CustomDialog>
     </CustomModal>
     <CustomModal

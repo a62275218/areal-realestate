@@ -23,7 +23,7 @@
     </div>
     <div class="bottom-control">
       <div class="confirm" @click="()=>this.$emit('confirm',this)">确认</div>
-      <div class="cancel" @click="()=>this.$emit('cancel')">取消</div>
+      <div v-if="!hideCancel" class="cancel" @click="()=>this.$emit('cancel')">取消</div>
     </div>
   </div>
 </template>
@@ -92,7 +92,7 @@ export default {
     border-top: 2rpx solid $bg-color;
     font-size: 34rpx;
     div {
-      width: 50%;
+      flex:1;
       text-align: center;
       line-height: 100rpx;
     }

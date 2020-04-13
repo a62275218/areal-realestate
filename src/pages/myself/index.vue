@@ -220,7 +220,7 @@ export default {
             username: input
           },
           successMsg: "已发送密码重置邮件到您的邮箱，请注意查收",
-          errorMsg: "发送失败"
+          errorMsg: "账号有误，请核实后重试"
         });
         return;
       }
