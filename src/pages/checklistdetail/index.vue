@@ -188,12 +188,22 @@ export default {
   display: flex;
   color: $gray-color;
   align-items: center;
-  justify-content: space-around;
+  flex-wrap: wrap;
   border-bottom: 2rpx solid $bg-color;
-  padding: 24rpx 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-
+  padding-bottom:10rpx;
+  &:after {
+    content: "";
+    width: 20%;
+    display: block;
+    height: 0;
+  }
+  .tab {
+    padding: 12rpx 0;
+    text-align: center;
+    min-width: 20%;
+  }
   .title {
     color: $dark-gray-color !important;
     font-weight: 500;
