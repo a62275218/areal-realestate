@@ -29,12 +29,12 @@ export default {
             type: "text",
             text: "保存名片",
             css: {
-              color:'#fff',
+              color: "#fff",
               width: "200rpx",
-              lineHeight:'70rpx',
-              textAlign:'center',
-              top:'14rpx',
-              fontSize: "30rpx",
+              lineHeight: "70rpx",
+              textAlign: "center",
+              top: "14rpx",
+              fontSize: "30rpx"
             }
           }
         ]
@@ -223,9 +223,18 @@ export default {
               complete: () => {}
             });
           } else if (res.authSetting["scope.writePhotosAlbum"] === false) {
-            console.log("未授权");
+            mpvue.showToast({
+              title: "未获得授权",
+              icon: "none"
+            });
             mpvue.openSetting();
           }
+        },
+        fail: () => {
+          mpvue.showToast({
+            title: "获取授权失败",
+            icon: "none"
+          });
         }
       });
       // return;

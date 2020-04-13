@@ -48,6 +48,7 @@
     </div>
     <div class="page-gap"></div>
     <div v-for="item in paymentList" :key="item.id">
+      <div class="date-gap" v-if="item.active">{{item.date}}</div>
       <div class="white-card billcard" v-if="item.active">
         <div class="title">{{item.address}}</div>
         <div class="content">{{item.description}}</div>
@@ -68,6 +69,7 @@
 <script>
 import FilterBar from "@/components/filterbar";
 import { mapState } from "vuex";
+import { formatDate } from "@/utils/index";
 import NavBar from "@/components/navbar";
 import ServiceBtn from "@/components/servicebtn";
 export default {
@@ -119,6 +121,8 @@ export default {
       this.getFilterInfo();
     },
     handleActive(index) {
+      this.startDate = "";
+      this.endDate = "";
       this.tabbar.forEach(item => {
         item.active = false;
       });
@@ -145,7 +149,7 @@ export default {
       });
     },
     async getFilterInfo() {
-      console.log(this.tabbar[1].active)
+      console.log(this.tabbar[1].active);
       const startTime = this.startDate
         ? Date.parse(new Date(this.startDate)) / 1000
         : 0;
@@ -186,6 +190,9 @@ export default {
         }
       );
       paymentList.forEach(item => {
+        item.date = item.recordTimeStamp
+          ? formatDate(item.recordTimeStamp * 1000)
+          : "";
         item.address = this.houseList.find(i => {
           return i.id === item.belongHouseId;
         }).address;
@@ -200,6 +207,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.date-gap{
+  padding-bottom:30rpx;
+  text-align: center;
+  color:$gray-color;
+}
 .date-picker {
   color: $dark-gray-color;
   padding: 20rpx 30rpx;

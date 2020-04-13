@@ -146,7 +146,8 @@ export default {
     },
     async getTotalInfo() {
       const beforeFinancialYear =
-        Date.parse(new Date()) < Date.parse(new Date().getFullYear() - 1, 7, 1);
+        Date.parse(new Date()) <
+        Date.parse(new Date(new Date().getFullYear(), 7, 1));
       const startTime = beforeFinancialYear
         ? Date.parse(new Date(new Date().getFullYear() - 1, 7, 1)) / 1000
         : Date.parse(new Date(new Date().getFullYear(), 7, 1)) / 1000;
@@ -244,6 +245,9 @@ export default {
           });
           item.income = income - output;
         });
+        rentalInfo.sort((a, b) => {
+          return b.recordTimeStamp - a.recordTimeStamp;
+        });
         this.rentalInfo = rentalInfo;
       } else {
         const rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
@@ -264,6 +268,9 @@ export default {
             }
           });
           item.income = income - output;
+        });
+        rentalInfo.sort((a, b) => {
+          return b.recordTimeStamp - a.recordTimeStamp;
         });
         this.rentalInfo = rentalInfo;
       }

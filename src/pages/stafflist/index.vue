@@ -4,7 +4,7 @@
     <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
       <NameCard :info="info"/>
     </CustomModal>
-    <div v-for="item in staffList" :key="item" @imgOK="onImgOk">
+    <div v-for="item in staffList" :key="item">
       <div class="gap"></div>
       <div class="white-card name-card">
         <div class="avatar">
@@ -36,24 +36,6 @@ export default {
   },
   data() {
     return {
-      template: {
-        background: "#eee",
-        width: "654rpx",
-        height: "400rpx",
-        borderRadius: "20rpx",
-        views: [
-          {
-            type: "text",
-            text: "酷家乐 移动前端",
-            css: {
-              left: "50rpx",
-              top: "48rpx",
-              fontSize: "40rpx",
-              align: "left"
-            }
-          },
-        ]
-      },
       nameCardShow: false,
       info: false
     };
@@ -78,9 +60,6 @@ export default {
       this.nameCardShow = true;
       this.info = info;
     },
-    onImgOk() {
-      console.log("123");
-    }
   }
 };
 </script>

@@ -364,7 +364,7 @@ export default {
     }
     .status {
       display: flex;
-      min-width: 114rpx;
+      min-width: 120rpx;
       justify-content: space-between;
       align-items: center;
       margin-left: 20rpx;

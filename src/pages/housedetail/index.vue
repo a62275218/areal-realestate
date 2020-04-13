@@ -6,7 +6,7 @@
         :content="houseValueContent"
         @confirm="sendHouseValueReq"
         @cancel="()=>this.houseValueModalShow=false"
-        :hideCancel="true"
+        :hideCancel="houseValueContent === '您的申请已成功发出，我们的团队会尽快联系您'"
       ></CustomDialog>
     </CustomModal>
     <CustomModal
@@ -24,8 +24,10 @@
       </swiper>
       <div class="carousel-desc">
         <div class="address">
-          <image src="/static/images/location.png" mode="widthFix" />
-          {{houseDetail.address}}
+          <image class="addimg" src="/static/images/location.png" mode="widthFix" />
+          <div
+            class="add"
+          >{{houseDetail.address}}</div>
         </div>
         <div class="desc">
           <div>{{houseDetail.houseDetail.roomNumber || 0}}房{{houseDetail.houseDetail.hallNumber || 0}}厅{{houseDetail.houseDetail.bathNumber || 0}}卫</div>
@@ -92,7 +94,7 @@
         </div>
         <div class="center">
           <div class="card-title">{{item.subTitle}}</div>
-          <div style="">{{item.name}}</div>
+          <div style>{{item.name}}</div>
         </div>
         <div class="right">
           <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
@@ -158,7 +160,9 @@ export default {
         this.houseValueContent === "是否需要免费房屋价值评估服务？"
           ? "requestHouseValueAssessmentById"
           : "requestRentalAssessmentById";
-      if(this.houseValueContent === "您的申请已成功发出，我们的团队会尽快联系您"){
+      if (
+        this.houseValueContent === "您的申请已成功发出，我们的团队会尽快联系您"
+      ) {
         this.houseValueModalShow = false;
         return;
       }
@@ -166,11 +170,11 @@ export default {
         data: {
           id: this.houseDetail.id,
           errorMsg: "申请失败",
-          successMsg:'申请成功'
+          successMsg: "申请成功"
         }
       });
-      if(reqRes && reqRes.code == 0){
-        this.houseValueContent = "您的申请已成功发出，我们的团队会尽快联系您"
+      if (reqRes && reqRes.code == 0) {
+        this.houseValueContent = "您的申请已成功发出，我们的团队会尽快联系您";
       }
     }
   },
@@ -210,13 +214,21 @@ export default {
   .carousel-desc {
     padding: 0 50rpx;
     .address {
+      word-break: break-all;
       color: $font-color;
       padding: 24rpx 0;
       display: flex;
       align-items: center;
-      image {
+      .addimg {
         width: 24rpx;
         padding-right: 10rpx;
+        height: 100%;
+        image {
+          width: 100%;
+        }
+      }
+      .add {
+        flex: 1;
       }
     }
     .desc {

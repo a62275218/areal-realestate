@@ -50,7 +50,10 @@
               <image :src="img" mode="widthFix" style="width:100%;" />
               <div class="gap"></div>
             </div>
-            <div class="desc">{{detail.description}}</div>
+            <div class="desc">
+              <div>{{detail.description}}</div>
+              <div class="date">{{item.recordDate}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -182,6 +185,10 @@ export default {
   padding: 40rpx;
   color: $dark-gray-color;
   font-size: 28rpx;
+  .date{
+    padding-top:40rpx;
+    color:$gray-color;
+  }
 }
 
 .subtabbar {
@@ -192,13 +199,7 @@ export default {
   border-bottom: 2rpx solid $bg-color;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  padding-bottom:10rpx;
-  &:after {
-    content: "";
-    width: 20%;
-    display: block;
-    height: 0;
-  }
+  padding-bottom: 10rpx;
   .tab {
     padding: 12rpx 0;
     text-align: center;

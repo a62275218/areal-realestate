@@ -45,6 +45,7 @@
       </div>
     </div>
     <div class="page-gap"></div>
+    <div class="notfound" v-if="!documentList.length">无搜索结果</div>
     <div class="white-card">
       <div
         v-for="item in documentList"
