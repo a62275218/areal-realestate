@@ -222,12 +222,17 @@ export default {
               },
               complete: () => {}
             });
-          } else if (res.authSetting["scope.writePhotosAlbum"] === false) {
+          } else {
+            mpvue.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success:()=>{
+                this.saveNameCard()
+              }
+            });
             mpvue.showToast({
               title: "未获得授权",
               icon: "none"
             });
-            mpvue.openSetting();
           }
         },
         fail: () => {

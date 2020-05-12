@@ -128,7 +128,16 @@
 					"id": -1,
 					"name": "pages/about/main",
 					"pathName": "pages/about/main",
+					"query": "",
 					"scene": null
+				},
+				{
+					"id": 12,
+					"name": "pages/housedetail/main",
+					"pathName": "pages/housedetail/main",
+					"query": "id=12&type=share",
+					"scene": 1036,
+					"referrerInfo": {}
 				}
 			]
 		}

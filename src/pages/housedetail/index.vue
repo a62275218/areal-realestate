@@ -25,9 +25,7 @@
       <div class="carousel-desc">
         <div class="address">
           <image class="addimg" src="/static/images/location.png" mode="widthFix" />
-          <div
-            class="add"
-          >{{houseDetail.address}}</div>
+          <div class="add">{{houseDetail.address}}</div>
         </div>
         <div class="desc">
           <div>{{houseDetail.houseDetail.roomNumber || 0}}房{{houseDetail.houseDetail.hallNumber || 0}}厅{{houseDetail.houseDetail.bathNumber || 0}}卫</div>
@@ -124,22 +122,28 @@ export default {
     };
   },
   onShow() {
-    const { id, type } = this.$root.$mp.query;
+    const { detail, id, type } = this.$root.$mp.query;
     this.share = type === "share";
-    this.houseDetail = this.$store.state.houseList.find(item => {
-      item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
-      item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate);
-      item.tenantInfo.lastRiseRentalDate = formatDate(
-        item.tenantInfo.lastRiseRentalDate
-      );
-      return item.id == id;
-    });
+    if (this.share) {
+      this.houseDetail = JSON.parse(detail);
+    } else {
+      this.houseDetail = this.$store.state.houseList.find(item => {
+        item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
+        item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate);
+        item.tenantInfo.lastRiseRentalDate = formatDate(
+          item.tenantInfo.lastRiseRentalDate
+        );
+        return item.id == id;
+      });
+    }
   },
   onShareAppMessage() {
     const { id } = this.$root.$mp.query;
     return {
       title: "房源分享",
-      path: `/pages/housedetail/main?id=${id}&type=share`,
+      path: `/pages/housedetail/main?detail=${JSON.stringify(
+        this.houseDetail
+      )}&type=share`,
       success: res => {},
       fail: () => {},
       complete: () => {}

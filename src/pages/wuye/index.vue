@@ -35,7 +35,7 @@
           <div class="sub-item" v-for="(quote,idx) in item.quote" :key="idx">
             <div class="subtitle">
               <div>
-                {{item.type}}
+                {{item.type}}423423423423423423423423423423423423423423423423423423432423423443544444444444444444444444444444444444432432432423423
                 <span class="recordDate">{{item.recordDate}}</span>
               </div>
               <div class="status pending" v-if="quote.status ==='待同意'">
@@ -364,8 +364,8 @@ export default {
     }
     .status {
       display: flex;
-      min-width: 120rpx;
-      justify-content: space-between;
+      min-width: 201rpx;
+      justify-content: flex-end;
       align-items: center;
       margin-left: 20rpx;
       .round {

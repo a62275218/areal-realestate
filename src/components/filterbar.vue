@@ -42,9 +42,10 @@ export default {
   color: $dark-gray-color;
   display: flex;
   background: #fff;
-  padding: 30rpx 0;
+  padding: 10px 0;
   border-bottom: 2rpx solid $bg-color;
   z-index: 100000;
+  max-height:111rpx;
   .title {
     color: $font-color;
     border-right: 2rpx solid $bg-color;

@@ -143,6 +143,7 @@ export default {
       this.endDate = "";
       this.searchID = item.id || "";
       this.getFilterInfo();
+      this.getTotalInfo()
     },
     async getTotalInfo() {
       const beforeFinancialYear =
@@ -157,13 +158,24 @@ export default {
         : (Date.parse(new Date(new Date().getFullYear() + 1, 6, 30)) +
             86400000) /
           1000;
-      const rentalInfo = await this.$request("fetchRentalByUserIdWithTime", {
-        data: {
-          id: this.$store.state.userInfo.id,
-          startTime,
-          endTime
-        }
-      });
+      let rentalInfo;
+      if (this.searchID) {
+        rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
+          data: {
+            id: this.searchID,
+            startTime,
+            endTime
+          }
+        });
+      } else {
+        rentalInfo = await this.$request("fetchRentalByUserIdWithTime", {
+          data: {
+            id: this.$store.state.userInfo.id,
+            startTime,
+            endTime
+          }
+        });
+      }
       let income = 0,
         output = 0;
       rentalInfo.forEach(item => {

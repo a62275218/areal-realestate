@@ -34,8 +34,9 @@
     </div>
     <div class="gap"></div>
     <div v-for="(item,index) in inSpectionList" :key="item">
+      <div class="top-date">{{item.recordDate}}</div>
       <video style="width:100%;margin:20rpx 0;" :src="item.videoLink"></video>
-      <div class="white-card">
+      <div class="white-card detail-card">
         <div class="subtabbar">
           <div
             v-for="(tab,idx) in item.otherInfo"
@@ -52,7 +53,6 @@
             </div>
             <div class="desc">
               <div>{{detail.description}}</div>
-              <div class="date">{{item.recordDate}}</div>
             </div>
           </div>
         </div>
@@ -181,14 +181,15 @@ export default {
   }
 }
 
+.top-date{
+  text-align:center;
+  color:$font-color;
+}
+
 .desc {
   padding: 40rpx;
   color: $dark-gray-color;
   font-size: 28rpx;
-  .date{
-    padding-top:40rpx;
-    color:$gray-color;
-  }
 }
 
 .subtabbar {
