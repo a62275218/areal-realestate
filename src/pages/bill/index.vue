@@ -69,25 +69,27 @@
         </div>
       </div>
     </div>
-    <div v-for="item in rentalInfo" :key="item">
-      <div class="page-gap"></div>
-      <div class="white-card detail-card">
-        <div class="title">
-          <div>{{item.recordDate}}</div>
-          <div class="doc" v-if="item.file" @click="previewDoc(item.file)">查看文件</div>
-        </div>
-        <div class="row" v-for="(row,idx) in item.info" :key="idx">
-          <div>{{row.title}}</div>
-          <div v-if="row.type === '收入'" class="in">${{row.content}}</div>
-          <div v-else-if="row.type === '支出'" class="out">${{row.content}}</div>
-          <div v-else class="normal">{{row.content}}</div>
-        </div>
-        <div class="row bottom">
-          <div class="subtitle">本月租金盈余</div>
-          <div class="number">${{item.income}}</div>
+    <template v-if="searchID">
+      <div v-for="item in rentalInfo" :key="item">
+        <div class="page-gap"></div>
+        <div class="white-card detail-card">
+          <div class="title">
+            <div>{{item.recordDate}}</div>
+            <div class="doc" v-if="item.file" @click="previewDoc(item.file)">查看文件</div>
+          </div>
+          <div class="row" v-for="(row,idx) in item.info" :key="idx">
+            <div>{{row.title}}</div>
+            <div v-if="row.type === '收入'" class="in">${{row.content}}</div>
+            <div v-else-if="row.type === '支出'" class="out">${{row.content}}</div>
+            <div v-else class="normal">{{row.content}}</div>
+          </div>
+          <div class="row bottom">
+            <div class="subtitle">本月租金盈余</div>
+            <div class="number">${{item.income}}</div>
+          </div>
         </div>
       </div>
-    </div>
+    </template>
     <div class="large-gap"></div>
   </div>
 </template>
@@ -119,6 +121,9 @@ export default {
   computed: {
     ...mapState(["houseList"]),
     newHouseList() {
+      if (this.houseList && this.houseList.length === 1) {
+        return this.houseList;
+      }
       return [{ address: "全部房屋" }].concat(this.houseList);
     }
   },
@@ -143,7 +148,7 @@ export default {
       this.endDate = "";
       this.searchID = item.id || "";
       this.getFilterInfo();
-      this.getTotalInfo()
+      this.getTotalInfo();
     },
     async getTotalInfo() {
       const beforeFinancialYear =

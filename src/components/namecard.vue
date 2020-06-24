@@ -89,106 +89,106 @@ export default {
             type: "text",
             text: "M",
             css: {
-              top: "230rpx",
-              left: "296rpx",
-              fontSize: "26rpx"
-            }
-          },
-          {
-            type: "text",
-            text: "T",
-            css: {
               top: "280rpx",
-              left: "298rpx",
+              left: "230rpx",
               fontSize: "26rpx"
             }
           },
+          // {
+          //   type: "text",
+          //   text: "T",
+          //   css: {
+          //     top: "280rpx",
+          //     left: "298rpx",
+          //     fontSize: "26rpx"
+          //   }
+          // },
           {
             type: "text",
             text: "E",
             css: {
               top: "330rpx",
-              left: "298rpx",
+              left: "230rpx",
               fontSize: "26rpx"
             }
           },
-          {
-            type: "text",
-            text: "A",
-            css: {
-              top: "380rpx",
-              left: "298rpx",
-              fontSize: "26rpx"
-            }
-          },
+          // {
+          //   type: "text",
+          //   text: "A",
+          //   css: {
+          //     top: "380rpx",
+          //     left: "298rpx",
+          //     fontSize: "26rpx"
+          //   }
+          // },
           {
             type: "text",
             text: this.info.mobile,
             css: {
-              top: "230rpx",
-              left: "330rpx",
-              fontSize: "26rpx",
-              width: "344rpx",
-              color: "rgb(31,166,55)",
-              whiteSpace: "break-all"
-            }
-          },
-          {
-            type: "text",
-            text: this.info.telephone,
-            css: {
               top: "280rpx",
-              left: "330rpx",
+              left: "260rpx",
               fontSize: "26rpx",
               width: "344rpx",
               color: "rgb(31,166,55)",
               whiteSpace: "break-all"
             }
           },
+          // {
+          //   type: "text",
+          //   text: this.info.telephone,
+          //   css: {
+          //     top: "280rpx",
+          //     left: "330rpx",
+          //     fontSize: "26rpx",
+          //     width: "344rpx",
+          //     color: "rgb(31,166,55)",
+          //     whiteSpace: "break-all"
+          //   }
+          // },
           {
             type: "text",
             text: this.info.email,
             css: {
               top: "330rpx",
-              left: "330rpx",
+              left: "260rpx",
               fontSize: "26rpx",
               width: "344rpx",
               color: "rgb(31,166,55)",
               whiteSpace: "break-all"
             }
           },
-          {
-            type: "text",
-            text: this.info.address,
-            css: {
-              top: "380rpx",
-              left: "330rpx",
-              fontSize: "26rpx",
-              width: "344rpx",
-              color: "rgb(31,166,55)",
-              whiteSpace: "break-all"
-            }
-          },
+          // {
+          //   type: "text",
+          //   text: this.info.address,
+          //   css: {
+          //     top: "380rpx",
+          //     left: "330rpx",
+          //     fontSize: "26rpx",
+          //     width: "344rpx",
+          //     color: "rgb(31,166,55)",
+          //     whiteSpace: "break-all"
+          //   }
+          // },
           {
             type: "image",
             url: this.info.qrcode,
             css: {
-              top: "190rpx",
-              left: "50rpx",
-              width: "96rpx",
-              height: "96rpx"
+              top: "250rpx",
+              left: "40rpx",
+              width: "146rpx",
+              height: "146rpx"
             }
           },
-          {
-            type: "image",
-            url: "/static/images/logo.png",
-            css: {
-              top: "320rpx",
-              left: "40rpx",
-              width: "210rpx",
-              height: "93rpx"
-            }
-          }
+          // {
+          //   type: "image",
+          //   url: "/static/images/logo.png",
+          //   css: {
+          //     top: "320rpx",
+          //     left: "40rpx",
+          //     width: "210rpx",
+          //     height: "93rpx"
+          //   }
+          // }
         ]
       }
     };

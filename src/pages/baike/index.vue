@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="bg flex">
     <div class="top">
       <image src="/static/images/white-logo.png" mode="widthFix" style="width:40%;" />
       <div class="intro">
@@ -12,37 +12,31 @@
       </div>
     </div>
     <div v-if="navbar[0].active">
-      <div class="swiper">
-        <swiper indicator-dots circular style="min-height:450rpx" indicator-active-color="#1fa637">
-          <swiper-item v-for="item in aboutImg" :key="item">
-            <image style="width:100%;background:#fff;" :src="item.url" mode="aspectFill" />
-          </swiper-item>
-        </swiper>
-      </div>
-      <div v-html="aboutText"></div>
-    </div>
-    <div v-if="navbar[1].active">
-      <div class="white-card namecard" v-for="item in staffList" :key="item">
-        <div class="avatar">
-          <image :src="item.avatarUrl" style="width:100%;height:100%" />
-        </div>
-        <div class="title">{{item.subTitle}}</div>
-        <div class="name">{{item.name}}</div>
-        <div class="detail">
-          <span>电话</span>
-          {{item.mobile}}
-        </div>
-        <div class="detail">
-          <span>邮件</span>
-          {{item.email}}
-        </div>
-        <div class="detail">
-          <span>微信</span>
-          {{item.wechat}}
+      <div class="gap"></div>
+      <div class="white-card newscard">
+        <image
+          :src="'/static/images/login-bg.png'"
+          mode="widthFix"
+          style="width:100%;max-height:300rpx;"
+        />
+        <div class="content">
+          <div class="title">建造您梦想的大别墅————澳洲买地建房流程及贴士</div>
+          <div class="bot">
+            <div class="text">by dasdsadsa</div>
+            <div class="read">阅读全文</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="large-gap"></div>
+    <template v-if="navbar[1].active">
+      <div class="wrap">
+        <scroll-view class="navbar" scroll-y="true">
+          <div :class="{'nav-item active': true}" class="nav-item" @click="changeActive(1)">测试</div>
+        </scroll-view>
+        <scroll-view class="content" scroll-y="true">scroll</scroll-view>
+      </div>
+    </template>
+    <div class="large-gap" v-if="!navbar[1].active"></div>
   </div>
 </template>
 
@@ -55,11 +49,15 @@ export default {
       aboutText: "",
       navbar: [
         {
-          title: "关于澳睿",
+          title: "新鲜资讯",
           active: true
         },
         {
-          title: "澳睿团队",
+          title: "房屋百科",
+          active: false
+        },
+        {
+          title: "FAQs",
           active: false
         }
       ]
@@ -79,6 +77,7 @@ export default {
       this.aboutImg = aboutImg;
       this.aboutText = `<div class="white-card description">${aboutText}</div>`;
     },
+    changeActive() {},
     switchActive(index) {
       const navbar = this.navbar;
       navbar.forEach((item, idx) => {
@@ -94,9 +93,16 @@ export default {
 </script>
 
 <style lang="scss">
+.flex{
+  display:flex;
+  flex-direction: column;
+  .wrap{
+    flex:1;
+  }
+}
 .description {
   padding: 80rpx 60rpx 60rpx 60rpx;
-  word-break:break-all;
+  word-break: break-all;
 }
 .swiper {
   border-radius: 20rpx;
@@ -107,7 +113,6 @@ export default {
 .top {
   background: $font-color;
   height: 350rpx;
-  margin-bottom: -40rpx;
   padding-top: 80rpx;
   position: relative;
   display: flex;
@@ -118,13 +123,13 @@ export default {
   }
   .intro {
     position: absolute;
-    bottom: 70rpx;
+    bottom: 30rpx;
     left: 50%;
     transform: translate(-50%, 0);
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     color: rgba(255, 255, 255, 0.5);
-    width: 400rpx;
+    width: 100%;
     margin: 0 auto;
     div {
       padding-bottom: 6rpx;
@@ -132,6 +137,29 @@ export default {
     .active {
       color: #fff;
       border-bottom: 6rpx solid #fff;
+    }
+  }
+}
+.newscard {
+  width: calc(100% - 20px);
+  margin: 20rpx auto 0;
+  overflow: hidden;
+  .content {
+    padding: 20rpx;
+    .title {
+      font-size: 28rpx;
+      font-weight: bold;
+      margin-bottom: 20rpx;
+    }
+    .bot {
+      display: flex;
+      justify-content: space-between;
+      .text {
+        color: $dark-gray-color;
+      }
+      .read {
+        color: $font-color;
+      }
     }
   }
 }
@@ -177,6 +205,25 @@ export default {
       padding-top: 30rpx;
     }
     padding: 10rpx 0;
+  }
+}
+.wrap {
+  display: flex;
+  height: 100%;
+  .navbar {
+    width: 200rpx;
+    min-width: 200rpx;
+    background: #f7f7f7;
+    .nav-item {
+      padding: 40rpx;
+      text-align: center;
+      color: #666666;
+      font-size: 30rpx;
+    }
+    .active {
+      background: #fff;
+      color: #ffcb34;
+    }
   }
 }
 </style>

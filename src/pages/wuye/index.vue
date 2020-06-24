@@ -20,7 +20,7 @@
     </div>-->
     <div class="gap" style="height:60rpx;"></div>
     <div class="white-card subtabbar">
-      <div class="title">报修进度</div>
+      <div class="title">报修问题</div>
       <div
         v-for="(item,index) in subtabbar"
         @click="handleSubActive(index)"

@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <StaffBtn v-if="userInfo" />
-    <ServiceBtn />
+    <!-- <ServiceBtn /> -->
     <CustomModal :visible="modifyModalShow" :onClose="()=>this.modifyModalShow=false">
       <CustomDialog
         :title="modifyTitle"
@@ -71,7 +71,7 @@
       <button class="common-btn login-btn" @click="handleLogin">登录</button>
       <div class="intro-text">
         <div>澳睿微信公众号: ArealPropertyGroup</div>
-        <div>澳睿网站: www.areal.com.au</div>
+        <div @click="navigateWeb">澳睿网站: www.areal.com.au</div>
       </div>
     </div>
     <div class="large-gap"></div>
@@ -114,7 +114,7 @@ export default {
           key: "email"
         },
         {
-          title: "地址",
+          title: "住宅地址",
           url: "",
           key: "address"
         }
@@ -153,6 +153,9 @@ export default {
         password: this.password
       });
     },
+    navigateWeb() {
+      mpvue.navigateTo({ url: "/pages/webview/main" });
+    },
     forgetPsw() {
       this.modifyTitle = "重置密码";
       this.modifyModalShow = true;
@@ -180,7 +183,7 @@ export default {
           this.modifyKey = "email";
           this.dialogType = "input";
           break;
-        case "地址":
+        case "住宅地址":
           this.modifyTitle = "更改地址";
           this.originalInfo = this.userInfo.address;
           this.modifyKey = "address";
@@ -200,7 +203,7 @@ export default {
           content = "邮箱";
           break;
         case "address":
-          content = "地址";
+          content = "住宅地址";
           break;
         case "phone":
           content = "手机";

@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="澳睿集团业主客户端"/>
+    <NavBar title="澳睿VIP业主中心"/>
     <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
       <NameCard :info="info"/>
     </CustomModal>

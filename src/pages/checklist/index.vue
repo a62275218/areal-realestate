@@ -25,16 +25,16 @@ export default {
       endDate: "",
       menu: [
         {
-          name: "物业检查视频"
+          name: "入住物业检查报告"
         },
         {
-          name: "验房报告"
+          name: "常规物业检查报告"
         },
         {
-          name: "退房报告"
+          name: "退房物业检查报告"
         },
         {
-          name: "交割验房报告"
+          name: "新房交割物业检查报告"
         }
       ]
     };

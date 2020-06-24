@@ -13,12 +13,14 @@
     "pages/checklistdetail/main",
     "pages/houselist/main",
     "pages/paybill/main",
-    "pages/message/main"
+    "pages/message/main",
+    "pages/webview/main",
+    "pages/baike/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1fa637",
-    "navigationBarTitleText": "澳睿集团业主客户端",
+    "navigationBarTitleText": "澳睿VIP业主中心",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
   },
@@ -37,6 +39,12 @@
         "text":"关于我们",
         "iconPath":"/static/images/about.png",
         "selectedIconPath":"/static/images/about-active.png"
+      },
+      {
+        "pagePath":"pages/baike/main",
+        "text":"业主百科",
+        "iconPath":"/static/images/baike.png",
+        "selectedIconPath":"/static/images/baike-active.png"
       },
       {
         "pagePath":"pages/myself/main",

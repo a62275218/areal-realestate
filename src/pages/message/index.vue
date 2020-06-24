@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="澳睿集团业主客户端" />
+    <NavBar title="澳睿VIP业主中心" />
     <div class="title" v-if="!msgList">暂无消息</div>
     <div v-for="item in msgList" :key="item">
       <div class="title">{{item.date}}</div>

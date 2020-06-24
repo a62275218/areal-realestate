@@ -1,8 +1,8 @@
 <template>
   <div class="bg">
     <StaffBtn />
-    <ServiceBtn />
-    <NavBar title="澳睿集团业主客户端" />
+    <!-- <ServiceBtn /> -->
+    <NavBar title="澳睿VIP业主中心" />
     <div class="top-card" v-if="houseList">
       <div class="index-title">
         <div>我的物业</div>
@@ -57,7 +57,7 @@
     </div>
     <div class="footer">
       <div>微信公众号: ArealPropertyGroup</div>
-      <div>澳瑞网站: www.areal.com</div>
+      <div @click="navigateWeb">澳睿网站: www.areal.com.au</div>
     </div>
     <div class="large-gap"></div>
   </div>
@@ -137,6 +137,9 @@ export default {
         mpvue.navigateTo({ url });
       }
     },
+    navigateWeb() {
+      mpvue.navigateTo({ url:'/pages/webview/main' });
+    },
     handleSwiperChange(e) {
       this.$store.commit("searchChange", e.mp.detail.current);
     },
@@ -156,7 +159,7 @@ export default {
           tab.active = false;
         });
         this.menuList = list.reverse().reverse();
-      },1000);
+      }, 1000);
       this.menuList = list.reverse().reverse();
       mpvue.navigateTo({ url: item.url });
     }

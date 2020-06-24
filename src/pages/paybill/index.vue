@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <NavBar title="支付账单" />
-    <ServiceBtn />
+    <!-- <ServiceBtn /> -->
     <FilterBar
       :list="newHouseList"
       searchKey="address"

@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <NavBar title="澳睿集团业主客户端" />
+    <NavBar title="澳睿VIP业主中心" />
     <CustomModal :visible="houseValueModalShow" :onClose="()=>this.houseValueModalShow=false">
       <CustomDialog
         :content="houseValueContent"
@@ -69,7 +69,7 @@
           <div>{{houseDetail.tenantInfo.paymentDate}}</div>
         </div>
         <div class="flex-between info-row">
-          <div>租约结束日期</div>
+          <div>租约日期</div>
           <div>{{houseDetail.tenantInfo.endDate}}</div>
         </div>
         <div class="flex-between info-row">

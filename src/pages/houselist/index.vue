@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar title="澳睿集团业主客户端"/>
+    <NavBar title="澳睿VIP业主中心"/>
     <div class="carousel">
       <div @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
         <div class="carousel-card">
