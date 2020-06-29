@@ -16,7 +16,8 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"useCompilerModule": true
+		"useCompilerModule": true,
+		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
@@ -139,6 +140,12 @@
 					"query": "id=12&type=share",
 					"scene": 1036,
 					"referrerInfo": {}
+				},
+				{
+					"id": -1,
+					"name": "pages/baike/main",
+					"pathName": "pages/baike/main",
+					"scene": null
 				}
 			]
 		}

@@ -13,16 +13,12 @@
     </div>
     <div v-if="navbar[0].active">
       <div class="gap"></div>
-      <div class="white-card newscard">
-        <image
-          :src="'/static/images/login-bg.png'"
-          mode="widthFix"
-          style="width:100%;max-height:300rpx;"
-        />
+      <div class="white-card newscard" v-for="(ne,index) in news" :key="index">
+        <image :src="ne.imgUrls[0]" mode="widthFix" style="width:100%;max-height:300rpx;" />
         <div class="content">
-          <div class="title">建造您梦想的大别墅————澳洲买地建房流程及贴士</div>
+          <div class="title">{{ne.title}}</div>
           <div class="bot">
-            <div class="text">by dasdsadsa</div>
+            <div class="text">by {{ne.author}} | {{ne.time}}</div>
             <div class="read">阅读全文</div>
           </div>
         </div>
@@ -31,9 +27,27 @@
     <template v-if="navbar[1].active">
       <div class="wrap">
         <scroll-view class="navbar" scroll-y="true">
-          <div :class="{'nav-item active': true}" class="nav-item" @click="changeActive(1)">测试</div>
+          <div
+            v-for="(cate,index) in baikeCate"
+            :key="index"
+            :class="{'nav-item active': index == baikeActiveIndex}"
+            class="nav-item"
+            @click="changeActive(index)"
+          >{{cate}}</div>
         </scroll-view>
-        <scroll-view class="content" scroll-y="true">scroll</scroll-view>
+        <scroll-view class="content" scroll-y="true">
+          <div>
+              <div>{{baikeItem.subCate}}</div>
+              <image
+                :src="baikeItem.imgUrls[0]"
+                mode="scaleToFill"
+                lazy-load="false">
+              </image>
+            </div>
+          <div v-for="(baikeItem,index) in baike" :key="index">
+            
+          </div>
+        </scroll-view>
       </div>
     </template>
     <div class="large-gap" v-if="!navbar[1].active"></div>
@@ -42,11 +56,16 @@
 
 <script>
 import { mapState } from "vuex";
+import { formatDate } from "@/utils/index";
 export default {
   data() {
     return {
       aboutImg: [],
       aboutText: "",
+      news: [],
+      baikeCate: [],
+      baike:{},
+      baikeActiveIndex: undefined,
       navbar: [
         {
           title: "新鲜资讯",
@@ -67,17 +86,41 @@ export default {
     this.initData();
   },
   computed: mapState(["staffList"]),
+  watch: {
+    baikeActiveIndex: {
+      async handler(val) {
+        const baike = await this.$request("fetchEncyclopediaBySubCate", {
+          data: {
+            subCate: this.baikeCate[val]
+          }
+        });
+        this.baike = baike
+      }
+    }
+  },
   methods: {
     async initData() {
-      this.$store.dispatch("fetchAllStaff");
-      const aboutContent = await this.$request("fetchAllAboutDetail", {
+      const news = await this.$request("fetchNews", {
         data: {}
       });
-      const { aboutImg, aboutText } = aboutContent;
-      this.aboutImg = aboutImg;
-      this.aboutText = `<div class="white-card description">${aboutText}</div>`;
+      if (news) {
+        news.forEach(item => {
+          item.time = formatDate(item.createTime);
+        });
+        this.news = news;
+      }
+      const baikeCate = await this.$request("fetchAllEncyclopediaSubCate", {
+        data: {}
+      });
+      if (baikeCate) {
+        this.baikeActiveIndex = 0;
+        this.baikeCate = baikeCate;
+      }
     },
-    changeActive() {},
+    formatDate,
+    changeActive(index) {
+      this.baikeActiveIndex = index;
+    },
     switchActive(index) {
       const navbar = this.navbar;
       navbar.forEach((item, idx) => {
@@ -93,11 +136,11 @@ export default {
 </script>
 
 <style lang="scss">
-.flex{
-  display:flex;
+.flex {
+  display: flex;
   flex-direction: column;
-  .wrap{
-    flex:1;
+  .wrap {
+    flex: 1;
   }
 }
 .description {
@@ -216,13 +259,13 @@ export default {
     background: #f7f7f7;
     .nav-item {
       padding: 40rpx;
-      text-align: center;
-      color: #666666;
+      color: #8b8b8b;
       font-size: 30rpx;
+      border-bottom: 2rpx solid #dfdfdf;
     }
     .active {
       background: #fff;
-      color: #ffcb34;
+      color: $font-color;
     }
   }
 }
