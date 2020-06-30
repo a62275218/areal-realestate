@@ -13,6 +13,7 @@ const store = new Vuex.Store({
     userInfo: false,
     houseList: [],
     staffList: [],
+    userStaff:[],
     showFilter: false,
     tipShow: false,
     activeIndex: 0,
@@ -70,12 +71,27 @@ const store = new Vuex.Store({
     },
     fetchAllStaff: async ({ state }) => {
       const staffList = await request("fetchstaffList", {
-        data: {}
+        data: {
+        }
       })
       if (staffList) {
         state.staffList = staffList
       }
-    }
+    },
+    fetchUserStaff: async ({ state }) => {
+      const userId = getIn(state,'userInfo','id')
+      if(!userId){
+        return
+      }
+      const staffList = await request("fetchstaffList", {
+        data: {
+          userId
+        }
+      })
+      if (staffList) {
+        state.userStaff = staffList
+      }
+    },
   },
   mutations: {
     retriveUser: (state) => {

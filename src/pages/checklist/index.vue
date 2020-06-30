@@ -23,6 +23,7 @@ export default {
     return {
       startDate: "",
       endDate: "",
+      enableNew: false,
       menu: [
         {
           name: "入住物业检查报告"
@@ -39,18 +40,65 @@ export default {
       ]
     };
   },
-  onShow() {
+  async onShow() {
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
-      callback: () => {
+      callback: async () => {
         this.searchID = this.houseList
           ? this.houseList[this.activeIndex].id
           : "";
+        const inSpectionList = await this.$request(
+          "fetchInspectionByHouseIdWithTime",
+          {
+            data: {
+              id: this.searchID,
+              startTime: 0,
+              endTime: (Date.parse(new Date()) + 86400000) / 1000
+            }
+          }
+        );
+        const hasNew = inSpectionList.find(item => {
+          return item.type == "新房交割物业检查报告";
+        });
+        if (hasNew) {
+          this.enableNew = true;
+        } else {
+          this.enableNew = false;
+        }
       }
     });
   },
+  watch:{
+    async activeIndex(val){
+      const inSpectionList = await this.$request(
+          "fetchInspectionByHouseIdWithTime",
+          {
+            data: {
+              id: this.houseList[val].id,
+              startTime: 0,
+              endTime: (Date.parse(new Date()) + 86400000) / 1000
+            }
+          }
+        );
+        const hasNew = inSpectionList.find(item => {
+          return item.type == "新房交割物业检查报告";
+        });
+        if (hasNew) {
+          this.enableNew = true;
+        } else {
+          this.enableNew = false;
+        }
+    }
+  },
   methods: {
     navigate(item) {
+      if (item.name === "新房交割物业检查报告" && !this.enableNew) {
+        mpvue.showToast({
+          title: "该项不符合业主房屋情况",
+          icon: "none"
+        });
+        return;
+      }
       mpvue.navigateTo({
         url: `/pages/checklistdetail/main?name=${item.name}`
       });

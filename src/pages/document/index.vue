@@ -47,17 +47,27 @@
     <div class="page-gap"></div>
     <div class="notfound" v-if="!documentList.length">无搜索结果</div>
     <div class="white-card">
+      <scroll-view scroll-x="true">
+        <div class="type-list">
+          <div
+            :class="{'active type':type == currentType,'type':type !== currentType}"
+            v-for="type in typeList"
+            :key="type"
+            @click="switchType(type)"
+          >{{type}}</div>
+        </div>
+      </scroll-view>
       <div
         v-for="item in documentList"
         :key="item"
-        class="file-card"
-        @click="previewDoc(item.link)"
       >
-        <div>
-          <div class="title">{{item.title}}</div>
-          <div class="date">{{item.recordDate}}</div>
+        <div v-if="item.type == currentType" class="file-card" @click="previewDoc(item.link)">
+          <div>
+            <div class="title">{{item.title}}</div>
+            <div class="date">{{item.recordDate}}</div>
+          </div>
+          <div class="lookup">查看文件</div>
         </div>
-        <div class="lookup">查看文件</div>
       </div>
     </div>
     <div class="large-gap"></div>
@@ -74,6 +84,8 @@ export default {
   data() {
     return {
       documentList: [],
+      typeList: [],
+      currentType: "",
       tipVisible: false,
       searchID: "",
       startDate: "",
@@ -140,12 +152,19 @@ export default {
               }
             }
           );
+
+          const typeList = [...new Set(documentList.map(item => item.type))];
+          this.typeList = typeList;
+          this.currentType = typeList[0];
           this.documentList = documentList;
         }
       }
     },
     showTip() {
       this.tipVisible = true;
+    },
+    switchType(type) {
+      this.currentType = type;
     },
     previewDoc(link) {
       const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
@@ -263,7 +282,22 @@ export default {
   }
   .lookup {
     color: $font-color;
-    min-width:110rpx;
+    min-width: 110rpx;
+  }
+}
+
+.type-list {
+  display: flex;
+  white-space:nowrap;
+  padding:0 10rpx;
+  .type {
+    font-size: 28rpx;
+    padding: 20rpx;
+    color: $dark-gray-color;
+  }
+  .active {
+    border-bottom: 2rpx solid $font-color;
+    color: #000;
   }
 }
 
@@ -296,7 +330,7 @@ export default {
     font-weight: 500;
   }
   .bottom {
-    border-top: 2rpx solid $bg-color !important;
+    border-top: 10rpx solid $bg-color !important;
   }
 }
 </style>

@@ -68,7 +68,7 @@ export default {
   mounted() {
     this.initData();
   },
-  computed: mapState(["staffList"]),
+  computed: mapState(["staffList", "userInfo"]),
   methods: {
     async initData() {
       this.$store.dispatch("fetchAllStaff");
@@ -96,7 +96,7 @@ export default {
 <style lang="scss">
 .description {
   padding: 80rpx 60rpx 60rpx 60rpx;
-  word-break:break-all;
+  word-break: break-all;
 }
 .swiper {
   border-radius: 20rpx;

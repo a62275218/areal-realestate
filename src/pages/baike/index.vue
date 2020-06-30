@@ -13,7 +13,7 @@
     </div>
     <div v-if="navbar[0].active">
       <div class="gap"></div>
-      <div class="white-card newscard" v-for="(ne,index) in news" :key="index">
+      <div class="white-card newscard" v-for="(ne,index) in news" :key="index" @click="goDetail(ne)">
         <image :src="ne.imgUrls[0]" mode="widthFix" style="width:100%;max-height:300rpx;" />
         <div class="content">
           <div class="title">{{ne.title}}</div>
@@ -33,24 +33,41 @@
             :class="{'nav-item active': index == baikeActiveIndex}"
             class="nav-item"
             @click="changeActive(index)"
-          >{{cate}}</div>
+          >{{cate.subCate}}</div>
         </scroll-view>
-        <scroll-view class="content" scroll-y="true">
-          <div>
-              <div>{{baikeItem.subCate}}</div>
-              <image
-                :src="baikeItem.imgUrls[0]"
-                mode="scaleToFill"
-                lazy-load="false">
-              </image>
-            </div>
-          <div v-for="(baikeItem,index) in baike" :key="index">
-            
+        <scroll-view class="baike-content" scroll-y="true">
+          <div class="img-wrapper">
+            <!-- <div class="center">{{baikeCate[baikeActiveIndex].subCate}}</div> -->
+            <image :src="baikeCate[baikeActiveIndex].subCateImg" mode="widthFix" style="width:100%" />
+          </div>
+          <div class="baike" v-for="(baikeItem,index) in baike" :key="index">
+            <div>{{index+1}}. {{baikeItem.title}}</div>
+            <div class="read" @click="goDetail(baikeItem)">阅读全文</div>
           </div>
         </scroll-view>
       </div>
     </template>
-    <div class="large-gap" v-if="!navbar[1].active"></div>
+    <div class="large-gap" v-if="navbar[2].active">
+      <div v-for="(item,index) in faq" :key="index" class="faq">
+        <div class="title" @click="changeFaqActive(index)">
+          <div style="display:flex;align-items:center;">
+            <div class="icon-add">
+              <view style="line-height:30rpx">{{faqActiveIndex === index?'-':'+'}}</view>
+            </div>
+            <div>{{item.title}}</div>
+          </div>
+          <div>
+            <image
+              :src="faqActiveIndex === index?'/static/images/up.png':'/static/images/down.png'"
+              mode="widthFix"
+              style="width:24rpx"
+            />
+          </div>
+        </div>
+        <div class="content" v-if="faqActiveIndex === index">{{item.description}}</div>
+      </div>
+    </div>
+    <div class="gap"></div>
   </div>
 </template>
 
@@ -64,8 +81,10 @@ export default {
       aboutText: "",
       news: [],
       baikeCate: [],
-      baike:{},
+      baike: [],
+      faq: [],
       baikeActiveIndex: undefined,
+      faqActiveIndex: undefined,
       navbar: [
         {
           title: "新鲜资讯",
@@ -91,10 +110,10 @@ export default {
       async handler(val) {
         const baike = await this.$request("fetchEncyclopediaBySubCate", {
           data: {
-            subCate: this.baikeCate[val]
+            subCate: this.baikeCate[val].subCate
           }
         });
-        this.baike = baike
+        this.baike = baike;
       }
     }
   },
@@ -116,10 +135,29 @@ export default {
         this.baikeActiveIndex = 0;
         this.baikeCate = baikeCate;
       }
+      const faq = await this.$request("fetchAllFaq", {
+        data: {}
+      });
+      if (faq) {
+        this.faq = faq;
+      }
     },
     formatDate,
     changeActive(index) {
       this.baikeActiveIndex = index;
+      this.baike = [];
+    },
+    goDetail(detail) {
+      mpvue.navigateTo({
+        url: `/pages/article/main?detail=${JSON.stringify(detail)}`
+      });
+    },
+    changeFaqActive(index) {
+      if (index === this.faqActiveIndex) {
+        this.faqActiveIndex = 99999;
+      } else {
+        this.faqActiveIndex = index;
+      }
     },
     switchActive(index) {
       const navbar = this.navbar;
@@ -198,7 +236,7 @@ export default {
       display: flex;
       justify-content: space-between;
       .text {
-        color: $dark-gray-color;
+        color: $gray-color;
       }
       .read {
         color: $font-color;
@@ -267,6 +305,64 @@ export default {
       background: #fff;
       color: $font-color;
     }
+  }
+}
+
+.baike-content {
+  background: #fff;
+  color: #8b8b8b;
+  padding: 20rpx;
+  .baike {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50rpx 0;
+    border-bottom: 2rpx solid #dfdfdf;
+    .read {
+      color: $font-color;
+      font-size: 24rpx;
+      padding-right: 10rpx;
+    }
+  }
+  .img-wrapper {
+    position: relative;
+    .center {
+      position: absolute;
+      color: #fff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.faq {
+  .title {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 40rpx 20rpx;
+    justify-content: space-between;
+    font-weight: bold;
+    border-bottom: 2rpx solid $bg-color;
+    .icon {
+      background: $font-color;
+      color: #fff;
+      border-radius: 50%;
+      width: 30rpx;
+      height: 30rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20rpx;
+      font-weight: normal;
+    }
+    .icon-add {
+      @extend .icon;
+    }
+  }
+  .content {
+    padding: 40rpx 64rpx;
   }
 }
 </style>

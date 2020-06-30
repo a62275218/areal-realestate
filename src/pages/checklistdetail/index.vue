@@ -33,31 +33,45 @@
       </div>
     </div>
     <div class="gap"></div>
-    <div v-for="(item,index) in inSpectionList" :key="item">
-      <div class="top-date">{{item.recordDate}}</div>
-      <video style="width:100%;margin:20rpx 0;" :src="item.videoLink"></video>
-      <div class="white-card detail-card">
-        <div class="subtabbar">
-          <div
-            v-for="(tab,idx) in item.otherInfo"
-            @click="handleSubActive({index,idx})"
-            :key="tab"
-            :class="{'tab active':tab.active,'tab':!tab.active}"
-          >{{tab.title}}</div>
-        </div>
-        <div v-for="(detail,idx) in item.otherInfo" :key="idx">
-          <div v-if="detail.active">
-            <div v-for="(img,i) in detail.img" :key="i">
-              <image :src="img" mode="widthFix" style="width:100%;" />
-              <div class="gap"></div>
-            </div>
-            <div class="desc">
-              <div>{{detail.description}}</div>
+    <template v-if="navTitle=== '常规物业检查报告'">
+      <div v-for="(item,index) in inSpectionList" :key="index">
+        <div class="top-date">{{item.recordDate}}</div>
+        <div class="white-card">
+          <video style="width:100%;" :src="item.videoLink"></video>
+          <!-- <div class="subtabbar">
+            <div
+              v-for="(tab,idx) in item.otherInfo"
+              @click="handleSubActive({index,idx})"
+              :key="tab"
+              :class="{'tab active':tab.active,'tab':!tab.active}"
+            >{{tab.title}}</div>
+          </div>-->
+          <div v-for="(detail,idx) in item.otherInfo" :key="idx">
+            <div v-if="detail.active">
+              <div v-for="(img,i) in detail.img" :key="i">
+                <image :src="img" mode="widthFix" style="width:100%;" />
+                <div class="gap"></div>
+              </div>
+              <div class="desc">
+                <div>{{detail.description}}</div>
+              </div>
             </div>
           </div>
+          <div class="row">
+            <div>{{item.recordDate}}</div>
+            <div class="lookup" @click="previewDoc(item.pdfLink)">查看文件</div>
+          </div>
+        </div>
+        <div class="gap"></div>
+      </div>
+    </template>
+    <div class="white-card" v-else>
+      <div v-for="(item,index) in inSpectionList" :key="index">
+        <div class="row">
+          <div>{{item.recordDate}}</div>
+          <div class="lookup" @click="previewDoc(item.pdfLink)">查看文件</div>
         </div>
       </div>
-      <div class="gap"></div>
     </div>
     <div class="large-gap"></div>
   </div>
@@ -72,7 +86,8 @@ export default {
     return {
       startDate: "",
       endDate: "",
-      inSpectionList: []
+      inSpectionList: [],
+      navTitle: ""
     };
   },
   onUnload() {
@@ -105,6 +120,34 @@ export default {
       this.endDate = "";
       this.searchID = item.id || "";
       this.getFilterInfo();
+    },
+    previewDoc(link) {
+      const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
+      if (regExp.test(link)) {
+        mpvue.showLoading({
+          title: "预览文件中"
+        });
+        mpvue.downloadFile({
+          url: link,
+          success: res => {
+            mpvue.openDocument({
+              filePath: res.tempFilePath
+            });
+            mpvue.hideLoading();
+          },
+          fail: () => {
+            mpvue.showToast({
+              title: "下载文件失败",
+              icon: "none"
+            });
+          }
+        });
+      } else {
+        console.log("image");
+        mpvue.previewImage({
+          urls: [link]
+        });
+      }
     },
     bindDateChangeStart(e) {
       this.startDate = e.mp.detail.value;
@@ -181,9 +224,10 @@ export default {
   }
 }
 
-.top-date{
-  text-align:center;
-  color:$font-color;
+.top-date {
+  text-align: center;
+  color: $font-color;
+  margin-bottom:10rpx;
 }
 
 .desc {
@@ -213,6 +257,18 @@ export default {
   .active {
     color: $font-color;
     border-bottom: 4rpx solid $font-color;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $gray-color;
+  padding: 30rpx !important;
+  .lookup {
+    color: $font-color;
+    min-width: 110rpx;
   }
 }
 </style>

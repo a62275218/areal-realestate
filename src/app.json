@@ -15,7 +15,8 @@
     "pages/paybill/main",
     "pages/message/main",
     "pages/webview/main",
-    "pages/baike/main"
+    "pages/baike/main",
+    "pages/article/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

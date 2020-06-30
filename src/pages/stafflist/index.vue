@@ -4,7 +4,7 @@
     <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
       <NameCard :info="info"/>
     </CustomModal>
-    <div v-for="item in staffList" :key="item">
+    <div v-for="item in userStaff" :key="item">
       <div class="gap"></div>
       <div class="white-card name-card">
         <div class="avatar">
@@ -41,7 +41,7 @@ export default {
     };
   },
   onShow() {
-    this.$store.dispatch("fetchAllStaff");
+    this.$store.dispatch("fetchUserStaff");
   },
   onReady() {
     mpvue
@@ -54,7 +54,7 @@ export default {
         console.log(res);
       });
   },
-  computed: mapState(["staffList"]),
+  computed: mapState(["userStaff"]),
   methods: {
     showCard(info) {
       this.nameCardShow = true;

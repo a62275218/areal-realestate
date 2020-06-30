@@ -128,8 +128,7 @@ export default {
       this.houseDetail = JSON.parse(detail);
     } else {
       this.houseDetail = this.$store.state.houseList.find(item => {
-        item.tenantInfo.paymentDate = formatDate(item.tenantInfo.paymentDate);
-        item.tenantInfo.endDate = formatDate(item.tenantInfo.endDate);
+        item.tenantInfo.paymentDate = `每月${item.tenantInfo.paymentDate}号`;
         item.tenantInfo.lastRiseRentalDate = formatDate(
           item.tenantInfo.lastRiseRentalDate
         );
