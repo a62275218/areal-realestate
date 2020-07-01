@@ -32,11 +32,11 @@ export default {
         }
       });
       
-      // this.$request("readMsgByUserId", {
-      //   data: {
-      //     id: this.userInfo.id
-      //   }
-      // });
+      this.$request("readMsgByUserId", {
+        data: {
+          id: this.userInfo.id
+        }
+      });
       msgList.forEach(item => {
         console.log(item)
         item.date = formatDate(item.createTime * 1000);

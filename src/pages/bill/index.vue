@@ -13,7 +13,7 @@
       defaultIndex="0"
     ></FilterBar>
     <div class="page-gap"></div>
-    <div class="white-card">
+    <div class="white-card" v-if="searchID">
       <div class="date-picker">
         <div style="min-width:110rpx;">查找日期</div>
         <image
@@ -119,7 +119,7 @@ export default {
     NavBar
   },
   computed: {
-    ...mapState(["houseList"]),
+    ...mapState(["houseList", "activeIndex"]),
     newHouseList() {
       if (this.houseList && this.houseList.length === 1) {
         return this.houseList;
@@ -131,18 +131,25 @@ export default {
     this.startDate = "";
     this.endDate = "";
   },
-  async onShow() {
-    this.$store.commit("searchChange", 0);
-    this.getDateRange();
-    this.$store.dispatch("getUserHouse", {
-      id: this.$store.state.userInfo.id,
-      callback: () => {
-        this.getFilterInfo();
-      }
-    });
-    this.getTotalInfo();
+  onShow() {
+    this.initData();
   },
   methods: {
+    async initData() {
+      this.$store.commit("searchChange", 0);
+      this.getDateRange();
+      this.$store.dispatch("getUserHouse", {
+        id: this.$store.state.userInfo.id,
+        callback: () => {
+          this.searchID = this.houseList
+            ? this.houseList[this.activeIndex].id
+            : "";
+          console.log(this.searchID);
+          this.getFilterInfo();
+        }
+      });
+      this.getTotalInfo();
+    },
     async handleSearchChange(item) {
       this.startDate = "";
       this.endDate = "";
@@ -217,7 +224,6 @@ export default {
           }
         });
       } else {
-        console.log("image");
         mpvue.previewImage({
           urls: [link]
         });
@@ -267,6 +273,7 @@ export default {
         });
         this.rentalInfo = rentalInfo;
       } else {
+        console.log(endTime)
         const rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
           data: {
             id: this.searchID,

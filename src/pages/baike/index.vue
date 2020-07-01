@@ -13,7 +13,12 @@
     </div>
     <div v-if="navbar[0].active">
       <div class="gap"></div>
-      <div class="white-card newscard" v-for="(ne,index) in news" :key="index" @click="goDetail(ne)">
+      <div
+        class="white-card newscard"
+        v-for="(ne,index) in news"
+        :key="index"
+        @click="goDetail(ne)"
+      >
         <image :src="ne.imgUrls[0]" mode="widthFix" style="width:100%;max-height:300rpx;" />
         <div class="content">
           <div class="title">{{ne.title}}</div>
@@ -51,9 +56,7 @@
       <div v-for="(item,index) in faq" :key="index" class="faq">
         <div class="title" @click="changeFaqActive(index)">
           <div style="display:flex;align-items:center;">
-            <div class="icon-add">
-              <view style="line-height:30rpx">{{faqActiveIndex === index?'-':'+'}}</view>
-            </div>
+            <image src="/static/images/plus.png" mode="widthFix" style="width:30rpx;margin-right:20rpx;" />
             <div>{{item.title}}</div>
           </div>
           <div>

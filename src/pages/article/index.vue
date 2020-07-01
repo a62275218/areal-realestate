@@ -30,6 +30,7 @@ export default {
   },
   onShareAppMessage() {
     return {
+      title: this.article.title,
       path: `/pages/article/main?detail=${JSON.stringify(this.article)}`
     };
   },

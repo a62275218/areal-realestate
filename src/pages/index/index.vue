@@ -110,11 +110,14 @@ export default {
     const sys = wx.getSystemInfoSync();
     this.carouselHeight = sys.windowWidth > 320 ? "90vw" : "93vw";
   },
-  onShow() {
+  async onShow() {
     if (!this.userInfo) {
       mpvue.switchTab({ url: "/pages/myself/main" });
     } else {
       this.$store.dispatch("getUserHouse", {
+        id: this.userInfo.id
+      });
+      this.$store.dispatch("fetchUserInfo", {
         id: this.userInfo.id
       });
     }
@@ -137,8 +140,9 @@ export default {
         mpvue.navigateTo({ url });
       }
     },
+
     navigateWeb() {
-      mpvue.navigateTo({ url:'/pages/webview/main' });
+      mpvue.navigateTo({ url: "/pages/webview/main" });
     },
     handleSwiperChange(e) {
       this.$store.commit("searchChange", e.mp.detail.current);

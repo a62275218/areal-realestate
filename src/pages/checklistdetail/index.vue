@@ -194,6 +194,12 @@ export default {
           }
           return item.type === name;
         });
+        if (!inSpectionList.length && name === "新房交割物业检查报告") {
+          mpvue.showToast({
+            title: "该项不符合该房屋情况",
+            icon: "none"
+          });
+        }
       }
     }
   }
@@ -227,7 +233,7 @@ export default {
 .top-date {
   text-align: center;
   color: $font-color;
-  margin-bottom:10rpx;
+  margin-bottom: 10rpx;
 }
 
 .desc {
