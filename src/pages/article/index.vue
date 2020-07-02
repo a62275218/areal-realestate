@@ -13,7 +13,7 @@
           <image src="/static/images/share.png" mode="widthFix" style="width:40rpx;" />
         </button>
       </div>
-      <div class="desc">{{article.description}}</div>
+      <div class="desc" v-html="article.description"></div>
     </div>
     <div class="gap"></div>
   </div>

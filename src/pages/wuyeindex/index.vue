@@ -107,6 +107,10 @@ export default {
             successMsg: "处理成功"
           }
         );
+        mpvue.showToast({
+          title: '请前往查看详情，查看维修详细信息',
+          icon: 'none'
+        });
         this.getFilterInfo();
       }
     },
@@ -115,6 +119,7 @@ export default {
         const pendingList = await this.$request(
           "fetchMaintainByHouseIdWithStatus",
           {
+            hideLoading:true,
             data: {
               id: this.searchID,
               status: "待报价",
@@ -127,6 +132,7 @@ export default {
         const urgentList = await this.$request(
           "fetchMaintainByHouseIdWithStatus",
           {
+            hideLoading:true,
             data: {
               id: this.searchID,
               status: "待确认",
