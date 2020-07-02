@@ -109,7 +109,8 @@ export default {
         );
         mpvue.showToast({
           title: '请前往查看详情，查看维修详细信息',
-          icon: 'none'
+          icon: 'none',
+          duration:5000
         });
         this.getFilterInfo();
       }

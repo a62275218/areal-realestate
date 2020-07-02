@@ -13,7 +13,9 @@ export function request(url, param) {
         ...param,
         success(res) {
           const code = getIn(res, 'data', 'code')
-          mpvue.hideLoading();
+          if (!hideLoading) {
+            mpvue.hideLoading();
+          }
           if (code === 0) {
             if (param && param.successMsg) {
               mpvue.showToast({
@@ -76,7 +78,7 @@ export function formatTime(date) {
 }
 
 export function formatDate(input) {
-  if (typeof(input) == 'string' && input.indexOf('-') > -1) {
+  if (typeof (input) == 'string' && input.indexOf('-') > -1) {
     input = input.replace(new RegExp('-', 'g'), '/');
   }
   const date = new Date(input)
