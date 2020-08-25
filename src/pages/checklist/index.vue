@@ -3,6 +3,10 @@
     <NavBar title="例行检查" />
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
     <div class="gap"></div>
+    <div v-if="latestNormalInpect">
+      <video :src="latestNormalInpect.videoLink" style="width:100%;display:block" />
+    </div>
+    <div class="gap"></div>
     <div class="white-card">
       <div class="row" v-for="item in menu" :key="item" @click="navigate(item)">
         <div>{{item.name}}</div>
@@ -24,6 +28,8 @@ export default {
       startDate: "",
       endDate: "",
       enableNew: false,
+      searchID:"",
+      latestNormalInpect:false,
       menu: [
         {
           name: "入住物业检查报告"
@@ -43,38 +49,39 @@ export default {
   async onShow() {
     this.$store.dispatch("getUserHouse", {
       id: this.$store.state.userInfo.id,
-      callback: async () => {
+      callback: () => {
         this.searchID = this.houseList
-          ? this.houseList[this.activeIndex].id
+          ? this.houseList[this.activeIndex === 999 ? 0:this.activeIndex].id
           : "";
-        const inSpectionList = await this.$request(
-          "fetchInspectionByHouseIdWithTime",
-          {
-            data: {
-              id: this.searchID,
-              startTime: 0,
-              endTime: (Date.parse(new Date()) + 86400000) / 1000
-            }
-          }
-        );
-        const hasNew = inSpectionList.find(item => {
-          return item.type == "新房交割物业检查报告";
-        });
-        if (hasNew) {
-          this.enableNew = true;
-        } else {
-          this.enableNew = false;
-        }
       }
     });
   },
   watch:{
-    async activeIndex(val){
-      const inSpectionList = await this.$request(
+    activeIndex:{
+      handler(val){
+        this.searchID = this.houseList
+          ? this.houseList[val].id
+          : "";
+      }
+    },
+    searchID:{
+      handler(val){
+        this.fetchinSpectionList(val)
+      }
+    },
+    immediate:true
+  },
+  methods: {
+    async fetchinSpectionList(id){
+      console.log('checklist change')
+        if(!id){
+          return
+        }
+        const inSpectionList = await this.$request(
           "fetchInspectionByHouseIdWithTime",
           {
             data: {
-              id: this.houseList[val].id,
+              id,
               startTime: 0,
               endTime: (Date.parse(new Date()) + 86400000) / 1000
             }
@@ -88,9 +95,15 @@ export default {
         } else {
           this.enableNew = false;
         }
-    }
-  },
-  methods: {
+        const latestNormalInpect = inSpectionList.find(item => {
+          return item.type == "常规物业检查报告";
+        });
+        if(latestNormalInpect){
+          this.latestNormalInpect = latestNormalInpect
+        }else{
+          this.latestNormalInpect = ""
+        }
+    },
     navigate(item) {
       if (item.name === "新房交割物业检查报告" && !this.enableNew) {
         mpvue.showToast({

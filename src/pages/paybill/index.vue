@@ -3,7 +3,8 @@
     <NavBar title="支付账单" />
     <!-- <ServiceBtn /> -->
     <FilterBar
-      :list="newHouseList"
+      :showAll="true"
+      :list="houseList"
       searchKey="address"
       @change="handleSearchChange"
       defaultIndex="0"
@@ -109,9 +110,6 @@ export default {
   },
   computed: {
     ...mapState(["houseList", "userInfo"]),
-    newHouseList() {
-      return [{ address: "全部房屋" }].concat(this.houseList);
-    }
   },
   methods: {
     async handleSearchChange(item) {
@@ -149,7 +147,6 @@ export default {
       });
     },
     async getFilterInfo() {
-      console.log(this.tabbar[1].active);
       const startTime = this.startDate
         ? Date.parse(new Date(this.startDate)) / 1000
         : 0;
@@ -189,17 +186,28 @@ export default {
           data: requestParam
         }
       );
+      console.log('paymentList',paymentList)
+      console.log(this.houseList)
       paymentList.forEach(item => {
         item.date = item.recordTimeStamp
           ? formatDate(item.recordTimeStamp * 1000)
           : "";
-        item.address = this.houseList.find(i => {
+          console.log(item.belongHouseId)
+        console.log(this.houseList.find(i => {
           return i.id === item.belongHouseId;
-        }).address;
+        }))
+        const belongHouse = this.houseList.find(i => {
+          return i.id === item.belongHouseId;
+        })
+        if(belongHouse){
+          item.address = belongHouse.address;
+        }
         item.active =
           (item.status === "已成功" && this.tabbar[1].active) ||
           (item.status !== "已成功" && this.tabbar[0].active);
       });
+      console.log('then',paymentList)
+      
       this.paymentList = paymentList;
     }
   }
@@ -207,10 +215,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.date-gap{
-  padding-bottom:30rpx;
+.date-gap {
+  padding-bottom: 30rpx;
   text-align: center;
-  color:$gray-color;
+  color: $gray-color;
 }
 .date-picker {
   color: $dark-gray-color;

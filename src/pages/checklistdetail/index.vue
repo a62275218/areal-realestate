@@ -101,7 +101,7 @@ export default {
       id: this.$store.state.userInfo.id,
       callback: () => {
         this.searchID = this.houseList
-          ? this.houseList[this.activeIndex].id
+          ? this.houseList[this.activeIndex===999?0:this.activeIndex].id
           : "";
         this.getFilterInfo();
       }
@@ -170,6 +170,7 @@ export default {
       this.inSpectionList = t.reverse().reverse();
     },
     async getFilterInfo() {
+      console.log('checklistdetail change')
       const { name } = this.$root.$mp.query;
       const startTime = this.startDate
         ? Date.parse(new Date(this.startDate)) / 1000

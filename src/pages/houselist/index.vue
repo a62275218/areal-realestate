@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar title="澳睿VIP业主中心"/>
+    <NavBar title="澳睿VIP业主中心" />
     <div class="carousel">
       <div @click="navigateHouse(item.id)" v-for="item in houseList" :key="item">
         <div class="carousel-card">
@@ -12,7 +12,7 @@
             {{item.address}}
           </div>
           <div class="desc">
-            <div>{{item.houseDetail.roomNumber || 0}}房{{item.houseDetail.hallNumber || 0}}厅{{item.houseDetail.bathNumber || 0}}卫</div>
+            <div>{{item.houseDetail.roomNumber || 0}}室{{item.houseDetail.bathNumber || 0}}卫{{item.houseDetail.hallNumber || 0}}车位</div>
           </div>
         </div>
         <div class="page-gap"></div>

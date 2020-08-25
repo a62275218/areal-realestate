@@ -1,8 +1,8 @@
 <template>
   <div class="bg">
-    <NavBar title="物业维护"/>
+    <NavBar title="物业维护" />
     <FilterBar :list="houseList" searchKey="address" @change="handleSearchChange"></FilterBar>
-    <div class="none" v-if="!urgentList.length && !pendingList.length">暂无项目需要维修</div>
+    <div class="none" v-if="!urgentList.length && !pendingList.length">点查看详情看维修状态</div>
     <div v-else>
       <div class="white-card urgent-card" v-for="item in urgentList" :key="item">
         <div class="content">
@@ -75,7 +75,7 @@ export default {
       id: this.$store.state.userInfo.id,
       callback: () => {
         this.searchID = this.houseList
-          ? this.houseList[this.activeIndex].id
+          ? this.houseList[this.activeIndex === 999?0:this.activeIndex].id
           : "";
         this.getFilterInfo();
       }
@@ -102,7 +102,8 @@ export default {
           {
             data: {
               id: item.id,
-              status: requestStatus
+              status: requestStatus,
+              sendMail:'one'
             },
             successMsg: "处理成功"
           }

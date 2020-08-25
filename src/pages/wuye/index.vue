@@ -146,7 +146,7 @@ export default {
       id: this.$store.state.userInfo.id,
       callback: () => {
         this.searchID = this.houseList
-          ? this.houseList[this.activeIndex].id
+          ? this.houseList[this.activeIndex === 999?0:this.activeIndex].id
           : "";
         this.getFilterInfo();
       }
@@ -171,7 +171,8 @@ export default {
             data: {
               id: item.id,
               qutoId: quote.id,
-              status: "已批准"
+              status: "已批准",
+              sendMail:'two'
             },
             successMsg: "处理成功"
           }

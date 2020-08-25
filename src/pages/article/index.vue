@@ -31,12 +31,13 @@ export default {
   onShareAppMessage() {
     return {
       title: this.article.title,
-      path: `/pages/article/main?detail=${JSON.stringify(this.article)}`
+      path: `/pages/article/main?detail=${encodeURIComponent(JSON.stringify(this.article))}`
     };
   },
-  onShow() {
+  onShow() {    
     const { detail } = this.$root.$mp.query;
-    const article = JSON.parse(detail);
+    const article = JSON.parse(decodeURIComponent(detail));
+    console.log(detail)
     article.time = formatDate(article.createTime);
     this.article = article;
   }

@@ -1,16 +1,34 @@
 <template>
   <div class="white-card dialog">
     <div class="title" v-if="title">{{title}}</div>
-    <div class="content">
+    <div class="content" :style="title ==='修改密码'?'display:block':'display:flex'">
       <div class="text" v-if="content">{{content}}</div>
       <div class="emphasize" v-if="emphasize">{{emphasize}}</div>
       <input
         v-if="type==='input'"
         type="text"
-        :placeholder="placeholder"
+        :placeholder="title ==='修改密码'?'请输入新密码':placeholder"
         auto-focus
+        ref="input1"
         class="dialog-input"
         v-model="input"
+      />
+      <input
+        v-if="type==='password'"
+        type="password"
+        placeholder="请输入新密码"
+        auto-focus
+        ref="input1"
+        class="dialog-input"
+        v-model="input1"
+      />
+      <input
+        v-if="type==='password'"
+        type="password"
+        style="margin:40rpx auto 0"
+        placeholder="请再次输入新密码"
+        class="dialog-input"
+        v-model="input2"
       />
       <textarea
         v-if="type==='textarea'"
@@ -33,8 +51,16 @@ export default {
   props: ["title", "type", "placeholder", "content", "emphasize","hideCancel"],
   data() {
     return {
-      input: ""
+      input: "",
+      input1:"",
+      input2:''
     };
+  },
+  onShow(){
+    if(this.title === '修改密码'){
+      this.input1 = "";
+      this.input2 = "";
+     }
   },
   watch: {
     title(val) {
@@ -62,11 +88,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding:80rpx;
-    position:relative;
+    padding: 80rpx;
+    position: relative;
     .emphasize {
-      position:absolute;
-      bottom:30rpx;
+      position: absolute;
+      bottom: 30rpx;
       color: $warn-color !important;
       font-size: 32rpx;
     }
@@ -78,9 +104,11 @@ export default {
       margin: 0 auto;
       height: 50rpx;
       font-size: 32rpx;
+      display: block;
       width: 90%;
       border-bottom: 2rpx solid $bg-color;
     }
+
     .textarea {
       height: 150rpx;
       border-bottom: none;
@@ -92,7 +120,7 @@ export default {
     border-top: 2rpx solid $bg-color;
     font-size: 34rpx;
     div {
-      flex:1;
+      flex: 1;
       text-align: center;
       line-height: 100rpx;
     }

@@ -7,7 +7,8 @@
       </div>
     </CustomModal>
     <FilterBar
-      :list="newHouseList"
+      :list="houseList"
+      :showAll="true"
       searchKey="address"
       @change="handleSearchChange"
       defaultIndex="0"
@@ -65,7 +66,7 @@
         <div class="date-range" style="padding-bottom:20rpx;">{{dateRange}}</div>
         <div class="title" style="padding-bottom:20rpx;">
           年度租金结算
-          <span class="number">${{income - output}}</span>
+          <span class="number">${{totalIncome}}</span>
         </div>
       </div>
     </div>
@@ -109,6 +110,7 @@ export default {
       startDate: "",
       endDate: "",
       dateRange: "",
+      beforeFinancialYear:Date.parse(new Date()) <Date.parse(new Date(new Date().getFullYear(), 6, 1)),
       income: 0,
       output: 0
     };
@@ -120,11 +122,8 @@ export default {
   },
   computed: {
     ...mapState(["houseList", "activeIndex"]),
-    newHouseList() {
-      if (this.houseList && this.houseList.length === 1) {
-        return this.houseList;
-      }
-      return [{ address: "全部房屋" }].concat(this.houseList);
+    totalIncome(){
+      return (this.income - this.output).toFixed(2)
     }
   },
   onUnload() {
@@ -132,44 +131,53 @@ export default {
     this.endDate = "";
   },
   onShow() {
-    this.initData();
+    this.getTotalInfo();
+    this.getDateRange();
+    this.$store.dispatch("getUserHouse", {
+      id: this.$store.state.userInfo.id
+    })
+    //this.$store.commit("searchChange", 999 );
+    // this.initData();
   },
   methods: {
-    async initData() {
-      this.$store.commit("searchChange", 0);
-      this.getDateRange();
-      this.$store.dispatch("getUserHouse", {
-        id: this.$store.state.userInfo.id,
-        callback: () => {
-          this.searchID = this.houseList
-            ? this.houseList[this.activeIndex].id
-            : "";
-          console.log(this.searchID);
-          this.getFilterInfo();
-        }
-      });
-      this.getTotalInfo();
-    },
+    // async initData() {
+    //   this.getDateRange();
+    //   this.$store.dispatch("getUserHouse", {
+    //     id: this.$store.state.userInfo.id,
+    //     callback: () => {
+    //       this.searchID = this.houseList
+    //         ? this.houseList[this.activeIndex].id
+    //         : "";
+    //       console.log(this.searchID);
+    //       this.getFilterInfo();
+    //     }
+    //   });
+    //   this.getTotalInfo();
+    // },
     async handleSearchChange(item) {
       this.startDate = "";
       this.endDate = "";
       this.searchID = item.id || "";
+      console.log('change',item)
       this.getFilterInfo();
       this.getTotalInfo();
     },
     async getTotalInfo() {
       const beforeFinancialYear =
         Date.parse(new Date()) <
-        Date.parse(new Date(new Date().getFullYear(), 7, 1));
+        Date.parse(new Date(new Date().getFullYear(), 6, 1));
+      console.log('beforeFinancialYear',beforeFinancialYear)
       const startTime = beforeFinancialYear
-        ? Date.parse(new Date(new Date().getFullYear() - 1, 7, 1)) / 1000
-        : Date.parse(new Date(new Date().getFullYear(), 7, 1)) / 1000;
+        ? Date.parse(new Date(new Date().getFullYear() - 1, 6, 1)) / 1000
+        : Date.parse(new Date(new Date().getFullYear(), 6, 1)) / 1000;
       const endTime = beforeFinancialYear
-        ? (Date.parse(new Date(new Date().getFullYear(), 6, 30)) + 86400000) /
+        ? (Date.parse(new Date(new Date().getFullYear(), 5, 30)) + 86400000) /
           1000
-        : (Date.parse(new Date(new Date().getFullYear() + 1, 6, 30)) +
+        : (Date.parse(new Date(new Date().getFullYear() + 1, 5, 30)) +
             86400000) /
           1000;
+      console.log('startTime',new Date(startTime * 1000))
+      console.log('endTime',new Date(endTime * 1000))
       let rentalInfo;
       if (this.searchID) {
         rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
@@ -199,8 +207,8 @@ export default {
           }
         });
       });
-      this.income = income;
-      this.output = output;
+      this.income = income.toFixed(2);
+      this.output = output.toFixed(2);
     },
     previewDoc(link) {
       const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
@@ -230,8 +238,8 @@ export default {
       }
     },
     getDateRange() {
-      this.dateRange = `${new Date().getFullYear() -
-        1}年7月1日 - ${new Date().getFullYear()}年6月30日`;
+      this.dateRange = this.beforeFinancialYear?`${new Date().getFullYear() -
+        1}年7月1日 - ${new Date().getFullYear()}年6月30日`:`${new Date().getFullYear()}年7月1日 - ${new Date().getFullYear()+1}年6月30日`;
     },
     bindDateChangeStart(e) {
       this.startDate = e.mp.detail.value;
@@ -273,7 +281,7 @@ export default {
         });
         this.rentalInfo = rentalInfo;
       } else {
-        console.log(endTime)
+        console.log('endTime',new Date(endTime * 1000))
         const rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
           data: {
             id: this.searchID,
@@ -291,7 +299,7 @@ export default {
               output += Number(bill.content);
             }
           });
-          item.income = income - output;
+          item.income = (income - output).toFixed(2);
         });
         rentalInfo.sort((a, b) => {
           return b.recordTimeStamp - a.recordTimeStamp;

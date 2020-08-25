@@ -151,8 +151,10 @@ export default {
       this.baike = [];
     },
     goDetail(detail) {
+      console.log(detail)
+      
       mpvue.navigateTo({
-        url: `/pages/article/main?detail=${JSON.stringify(detail)}`
+        url: `/pages/article/main?detail=${encodeURIComponent(JSON.stringify(detail))}`
       });
     },
     changeFaqActive(index) {

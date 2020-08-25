@@ -3,13 +3,14 @@
     <div class="filter-box">
       <div class="title">地址</div>
       <div class="search-field" @click="toggleFilterList">
-        <div class="result" v-if="list[activeIndex]">{{list[activeIndex][searchKey]}}</div>
+        <div class="result" v-if="showAll && (index == 999)">{{displayList[0][searchKey]}}</div>
+        <div class="result" v-else-if="list[activeIndex]">{{list[activeIndex][searchKey]}}</div>
         <image src="/static/images/Right arrow.png" mode="widthFix" />
       </div>
     </div>
     <div class="filter-list" v-show="showFilter" @click="toggleFilterList">
       <div
-        v-for="(item,index) in list"
+        v-for="(item,index) in displayList"
         :key="item"
         class="filter-card"
         @click.stop="chooseItem(index)"
@@ -22,16 +23,33 @@
 import { mapState } from "vuex";
 
 export default {
-  props: ["list", "searchKey", "defaultIndex"],
-  computed: mapState(["showFilter", "activeIndex"]),
+  props: ["list", "searchKey", "defaultIndex","showAll"],
+  data(){
+    return {
+      index:999
+    }
+  },
+  computed: {
+    ...mapState(["showFilter", "activeIndex"]),
+    displayList(){
+      return this.showAll?[{ [this.searchKey]: "全部房屋" }].concat(this.list):this.list
+    }
+  },
   methods: {
     toggleFilterList() {
       this.$store.commit("toggleFilterList");
     },
     chooseItem(index) {
-      this.$emit("change", this.list[index]);
+      if(this.showAll && index === 0){
+        this.index = 999;
+        this.$emit("change", 'all');
+        this.$store.commit("toggleFilterList");
+        return
+      }
+      this.index = 0;
+      this.$emit("change", this.displayList[index]);
       this.$store.commit("toggleFilterList");
-      this.$store.commit("searchChange", index);
+      this.$store.commit("searchChange", this.showAll?(index - 1):index);
     }
   }
 };
@@ -45,7 +63,7 @@ export default {
   padding: 10px 0;
   border-bottom: 2rpx solid $bg-color;
   z-index: 100000;
-  max-height:111rpx;
+  max-height: 111rpx;
   .title {
     color: $font-color;
     border-right: 2rpx solid $bg-color;

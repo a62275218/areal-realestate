@@ -32,12 +32,17 @@
       </div>
       <div class="gap"></div>
       <div class="white-card">
-        <div class="row" v-for="(item,idx) in menu2" :key="idx" @click="navigate(item.url)">
+        <div
+          class="row"
+          v-for="(item,idx) in menu2"
+          :key="idx"
+          @click="item.url?navigate(item.url):handleSpecial(item)"
+        >
           <div>{{item.title}}</div>
           <div style="display:flex;align-items:center;">
             <i
               class="uncheck"
-              v-if="idx === 0?userInfo.uncheckedMsgNum:userInfo.uncheckedPaymentNum"
+              v-if="idx === 0?userInfo.uncheckedMsgNum:idx === 1?userInfo.uncheckedPaymentNum:false"
             >{{idx === 0?userInfo.uncheckedMsgNum:userInfo.uncheckedPaymentNum}}</i>
             <i class="iconfont icon-iconfontjiantou2"></i>
           </div>
@@ -127,6 +132,9 @@ export default {
         {
           title: "支付账单",
           url: "/pages/paybill/main"
+        },
+        {
+          title: "修改密码",
         }
       ]
     };
@@ -152,6 +160,12 @@ export default {
         account: this.account,
         password: this.password
       });
+    },
+    handleSpecial(item){
+      const {title} = item;
+      if(title === '修改密码'){
+        this.showModal('修改密码')
+      }
     },
     navigateWeb() {
       mpvue.navigateTo({ url: "/pages/webview/main" });
@@ -189,11 +203,17 @@ export default {
           this.modifyKey = "address";
           this.dialogType = "textarea";
           break;
+        case "修改密码":
+          this.modifyTitle = "修改密码";
+          this.modifyKey = "password";
+          this.dialogType = "password";
+          break;
       }
       this.modifyModalShow = true;
     },
     async handleModify(state) {
-      const { input } = state;
+      const { input,input1,input2 } = state;
+      console.log(input1,input2)
       let content;
       switch (this.modifyKey) {
         case "resetPsw":
@@ -210,7 +230,21 @@ export default {
           break;
         default:
       }
-      if (!input) {
+      if(this.modifyKey === 'password'){
+        if(!input1){
+            mpvue.showToast({
+            title: `请输入密码`,
+            icon: "none"
+          });
+          return
+        }else if(input2 !== input1){
+          mpvue.showToast({
+            title: `两次密码输入不一致`,
+            icon: "none"
+          });
+          return
+        }
+      }else if (!input) {
         mpvue.showToast({
           title: `请输入${content}`,
           icon: "none"
@@ -240,7 +274,7 @@ export default {
       const newUser = await this.$request("updateUserInfo", {
         data: {
           id: this.userInfo.id,
-          [this.modifyKey]: input
+          [this.modifyKey]: this.modifyKey === 'password'?input1:input
         }
       });
       if (!newUser) {

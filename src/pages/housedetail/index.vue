@@ -28,7 +28,7 @@
           <div class="add">{{houseDetail.address}}</div>
         </div>
         <div class="desc">
-          <div>{{houseDetail.houseDetail.roomNumber || 0}}房{{houseDetail.houseDetail.hallNumber || 0}}厅{{houseDetail.houseDetail.bathNumber || 0}}卫</div>
+          <div>{{houseDetail.houseDetail.roomNumber || 0}}室{{houseDetail.houseDetail.bathNumber || 0}}卫{{houseDetail.houseDetail.hallNumber || 0}}车位</div>
           <button open-type="share" class="share-btn">分享</button>
         </div>
       </div>
@@ -93,9 +93,19 @@
         <div class="center">
           <div class="card-title">{{item.subTitle}}</div>
           <div style>{{item.name}}</div>
+          <div class="detail">
+            <div>
+              <span>M</span>
+              {{item.mobile}}
+            </div>
+            <div>
+              <span>E</span>
+              {{item.email}}
+            </div>
+          </div>
         </div>
         <div class="right">
-          <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
+          <button class="white-btn name-btn" @click="()=>showCard(item)">查看二维码</button>
         </div>
       </div>
       <div class="gap"></div>
@@ -151,6 +161,11 @@ export default {
   methods: {
     formatDate,
     showCard(info) {
+      const {qrcode} = info;
+      mpvue.previewImage({
+        urls: [qrcode]
+      })
+      return
       this.nameCardShow = true;
       this.info = info;
     },
@@ -267,13 +282,27 @@ export default {
   margin: 0 auto;
   padding: 20rpx 40rpx;
   display: flex;
+  word-break: break-all;
+  position: relative;
   .center {
-    word-break: break-all;
+    padding: 0 20rpx;
     .card-title {
       color: $dark-gray-color;
     }
+    .detail {
+      margin-top: 30rpx;
+      color: $font-color;
+      span {
+        display: inline-block;
+        color: #000;
+        width: 30rpx;
+      }
+    }
   }
   .right {
+    position: absolute;
+    right: 40rpx;
+    top: 40rpx;
     display: flex;
     align-items: center;
     .name-btn {

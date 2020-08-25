@@ -1,8 +1,12 @@
 <template>
   <div class="bg">
-    <NavBar title="澳睿VIP业主中心"/>
-    <CustomModal :visible="nameCardShow" :onClose="()=>this.nameCardShow=false" customStyle="width:90%;">
-      <NameCard :info="info"/>
+    <NavBar title="澳睿VIP业主中心" />
+    <CustomModal
+      :visible="nameCardShow"
+      :onClose="()=>this.nameCardShow=false"
+      customStyle="width:90%;"
+    >
+      <NameCard :info="info" />
     </CustomModal>
     <div v-for="item in userStaff" :key="item">
       <div class="gap"></div>
@@ -11,11 +15,22 @@
           <image :src="item.avatarUrl" />
         </div>
         <div class="center">
-          <div class="card-title">{{item.subTitle}}</div>
           <div>{{item.name}}</div>
+          <div class="card-title">{{item.subTitle}}</div>
+          <div class="card-title">{{item.occupation}}</div>
+          <div class="detail">
+            <div>
+              <span>M</span>
+              {{item.mobile}}
+            </div>
+            <div>
+              <span>E</span>
+              {{item.email}}
+            </div>
+          </div>
         </div>
         <div class="right">
-          <button class="white-btn name-btn" @click="()=>showCard(item)">查看名片</button>
+          <button class="white-btn name-btn" @click="()=>showCard(item)">查看二维码</button>
         </div>
       </div>
     </div>
@@ -42,6 +57,7 @@ export default {
   },
   onShow() {
     this.$store.dispatch("fetchUserStaff");
+    console.log(this.userStaff)
   },
   onReady() {
     mpvue
@@ -57,6 +73,11 @@ export default {
   computed: mapState(["userStaff"]),
   methods: {
     showCard(info) {
+      const {qrcode} = info;
+      mpvue.previewImage({
+        urls: [qrcode]
+      })
+      return
       this.nameCardShow = true;
       this.info = info;
     },
@@ -71,12 +92,26 @@ export default {
   padding: 20rpx 40rpx;
   display: flex;
   word-break: break-all;
+  position:relative;
   .center {
+    padding: 0 20rpx;
     .card-title {
       color: $dark-gray-color;
     }
+    .detail{
+      margin-top:30rpx;
+      color:$font-color;
+      span{
+        display:inline-block;
+        color:#000;
+        width:30rpx;
+      }
+    }
   }
   .right {
+    position:absolute;
+    right:40rpx;
+    top:40rpx;
     display: flex;
     align-items: center;
     .name-btn {

@@ -57,10 +57,7 @@
           >{{type}}</div>
         </div>
       </scroll-view>
-      <div
-        v-for="item in documentList"
-        :key="item"
-      >
+      <div v-for="item in documentList" :key="item">
         <div v-if="item.type == currentType" class="file-card" @click="previewDoc(item.link)">
           <div>
             <div class="title">{{item.title}}</div>
@@ -112,7 +109,7 @@ export default {
       id: this.$store.state.userInfo.id,
       callback: () => {
         this.searchID = this.houseList
-          ? this.houseList[this.activeIndex].id
+          ? this.houseList[this.activeIndex === 999?0:this.activeIndex].id
           : "";
         this.getFilterInfo();
       }
@@ -288,8 +285,8 @@ export default {
 
 .type-list {
   display: flex;
-  white-space:nowrap;
-  padding:0 10rpx;
+  white-space: nowrap;
+  padding: 0 10rpx;
   .type {
     font-size: 28rpx;
     padding: 20rpx;

@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     userInfo: false,
     houseList: [],
     staffList: [],
-    userStaff:[],
+    userStaff: [],
     showFilter: false,
     tipShow: false,
     activeIndex: 0,
@@ -48,6 +48,16 @@ const store = new Vuex.Store({
         hideLoading: true
       })
       if (userInfo) {
+        if (userInfo.status === '关闭') {
+          mpvue.showModal({
+            title: '您的账户已被关闭',
+            content: '感谢您一直以来的支持，很遗憾看到您离开澳睿服务，有可能我们还有做得不够好的地方，希望能有机会让您看到我们的进步',
+            complete: () => {
+              commit('userLogout', userInfo)
+            }
+          })
+          return
+        }
         commit('updateUser', userInfo)
       }
     },
@@ -79,8 +89,8 @@ const store = new Vuex.Store({
       }
     },
     fetchUserStaff: async ({ state }) => {
-      const userId = getIn(state,'userInfo','id')
-      if(!userId){
+      const userId = getIn(state, 'userInfo', 'id')
+      if (!userId) {
         return
       }
       const staffList = await request("fetchstaffList", {
@@ -112,6 +122,7 @@ const store = new Vuex.Store({
       state.showFilter = !state.showFilter
     },
     searchChange: (state, index) => {
+      console.log(state)
       state.activeIndex = index
     },
     showTip: state => {
