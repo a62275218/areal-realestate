@@ -76,7 +76,7 @@
         <div class="white-card detail-card">
           <div class="title">
             <div>{{item.recordDate}}</div>
-            <div class="doc" v-if="item.file" @click="previewDoc(item.file)">查看文件</div>
+            <div class="doc" v-if="item.file && item.file.length" @click="displayDocAction(item.file)">查看文件</div>
           </div>
           <div class="row" v-for="(row,idx) in item.info" :key="idx">
             <div>{{row.title}}</div>
@@ -184,7 +184,8 @@ export default {
           data: {
             id: this.searchID,
             startTime,
-            endTime
+            endTime,
+            // userId:this.$store.state.userInfo.id
           }
         });
       } else {
@@ -209,6 +210,24 @@ export default {
       });
       this.income = income.toFixed(2);
       this.output = output.toFixed(2);
+    },
+    displayDocAction(arr){
+      const _this = this
+      if(arr.length){
+        const mappedArr = arr.map(item=>{
+          return item.substr(item.lastIndexOf('/') + 1)
+        })
+        mpvue.showActionSheet({
+          itemList: mappedArr,
+          success: function (res) {
+            console.log('chosen',arr[res.tapIndex]);
+            _this.previewDoc(arr[res.tapIndex])
+          },
+          fail: function (res) {
+            console.log(res.errMsg);
+          }
+        });
+      }
     },
     previewDoc(link) {
       const regExp = /\.(doc|docx|xls|xlsx|ppt|pptx|pdf)$/;
@@ -286,7 +305,8 @@ export default {
           data: {
             id: this.searchID,
             startTime,
-            endTime
+            endTime,
+            // userId:this.$store.state.userInfo.id
           }
         });
         rentalInfo.forEach(item => {

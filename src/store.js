@@ -54,6 +54,7 @@ const store = new Vuex.Store({
             content: '感谢您一直以来的支持，很遗憾看到您离开澳睿服务，有可能我们还有做得不够好的地方，希望能有机会让您看到我们的进步',
             complete: () => {
               commit('userLogout', userInfo)
+              mpvue.switchTab({ url: "/pages/myself/main" });
             }
           })
           return

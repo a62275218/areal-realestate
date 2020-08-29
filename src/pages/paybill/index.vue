@@ -172,7 +172,8 @@ export default {
       } else {
         if (this.searchID) {
           requestParam = {
-            houseId: this.searchID
+            houseId: this.searchID,
+            userId: this.userInfo.id
           };
         } else {
           requestParam = {
