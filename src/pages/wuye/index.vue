@@ -187,7 +187,6 @@ export default {
             icon: "none"
           });
         }
-        console.log(changeStatusRes);
         this.confirmModalShow = false;
         this.getFilterInfo();
       }

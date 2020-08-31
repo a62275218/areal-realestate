@@ -158,7 +158,7 @@ export default {
       this.startDate = "";
       this.endDate = "";
       this.searchID = item.id || "";
-      console.log('change',item)
+
       this.getFilterInfo();
       this.getTotalInfo();
     },
@@ -166,7 +166,6 @@ export default {
       const beforeFinancialYear =
         Date.parse(new Date()) <
         Date.parse(new Date(new Date().getFullYear(), 6, 1));
-      console.log('beforeFinancialYear',beforeFinancialYear)
       const startTime = beforeFinancialYear
         ? Date.parse(new Date(new Date().getFullYear() - 1, 6, 1)) / 1000
         : Date.parse(new Date(new Date().getFullYear(), 6, 1)) / 1000;
@@ -176,8 +175,6 @@ export default {
         : (Date.parse(new Date(new Date().getFullYear() + 1, 5, 30)) +
             86400000) /
           1000;
-      console.log('startTime',new Date(startTime * 1000))
-      console.log('endTime',new Date(endTime * 1000))
       let rentalInfo;
       if (this.searchID) {
         rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
@@ -220,7 +217,6 @@ export default {
         mpvue.showActionSheet({
           itemList: mappedArr,
           success: function (res) {
-            console.log('chosen',arr[res.tapIndex]);
             _this.previewDoc(arr[res.tapIndex])
           },
           fail: function (res) {
@@ -300,7 +296,6 @@ export default {
         });
         this.rentalInfo = rentalInfo;
       } else {
-        console.log('endTime',new Date(endTime * 1000))
         const rentalInfo = await this.$request("fetchRentalByHouseIdWithTime", {
           data: {
             id: this.searchID,

@@ -137,13 +137,20 @@ export default {
     if (this.share) {
       this.houseDetail = JSON.parse(detail);
     } else {
-      this.houseDetail = this.$store.state.houseList.find(item => {
-        item.tenantInfo.paymentDate = `每月${item.tenantInfo.paymentDate}号`;
-        item.tenantInfo.lastRiseRentalDate = formatDate(
-          item.tenantInfo.lastRiseRentalDate
-        );
+       const detail = this.$store.state.houseList.find(item => {
+        
         return item.id == id;
       });
+      if(detail){
+        const houseDetail = {...detail}
+        houseDetail.tenantInfo.lastRiseRentalDate = formatDate(
+          houseDetail.tenantInfo.lastRiseRentalDate
+        );
+        houseDetail.tenantInfo.paymentDate = `每月${houseDetail.tenantInfo.paymentDate}号`;
+        this.houseDetail = houseDetail
+      }
+      
+      console.log('housedetail',this.houseDetail)
     }
   },
   onShareAppMessage() {

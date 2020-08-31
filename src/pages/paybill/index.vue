@@ -113,6 +113,7 @@ export default {
   },
   methods: {
     async handleSearchChange(item) {
+      console.log('item',item)
       this.startDate = "";
       this.endDate = "";
       this.searchID = item.id || "";
@@ -154,8 +155,11 @@ export default {
         ? (Date.parse(new Date(this.endDate)) + 86400000) / 1000
         : (Date.parse(new Date()) + 86400000) / 1000;
       let requestParam;
+      console.log('tab',this.tabbar)
+      console.log('searchID',this.searchID)
       if (this.tabbar[1].active) {
         if (this.searchID) {
+          console.log('userId',this.userInfo)
           requestParam = {
             userId: this.userInfo.id,
             houseId: this.searchID,
