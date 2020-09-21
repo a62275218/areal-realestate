@@ -23,7 +23,7 @@
             </swiper-item>
           </block>
         </swiper>
-        <div class="bottom" @click="changeStatus(item)">知道了</div>
+        <div class="bottom" @click="changeStatus(item)">申请报价</div>
       </div>
       <div class="white-card pending-card" v-for="item in pendingList" :key="item">
         <div class="content">
@@ -92,7 +92,7 @@ export default {
     async changeStatus(item) {
       let requestStatus;
       if (item.status === "待确认") {
-        requestStatus = "处理中";
+        requestStatus = "待批准";
       } else if (item.status === "待报价") {
         requestStatus = "待批准";
       }

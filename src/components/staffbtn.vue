@@ -21,6 +21,7 @@ export default {
   position: fixed;
   bottom: 180rpx;
   right: 50rpx;
+  
   image{
     width:100%;
   }

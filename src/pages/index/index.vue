@@ -273,7 +273,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $gray-color;
+    color: $font-color;
     padding: 60rpx 0;
     image {
       width: 50rpx;

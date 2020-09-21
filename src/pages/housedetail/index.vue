@@ -138,18 +138,16 @@ export default {
       this.houseDetail = JSON.parse(detail);
     } else {
        const detail = this.$store.state.houseList.find(item => {
-        
         return item.id == id;
       });
       if(detail){
-        const houseDetail = {...detail}
+        const houseDetail = JSON.parse(JSON.stringify(detail))
         houseDetail.tenantInfo.lastRiseRentalDate = formatDate(
           houseDetail.tenantInfo.lastRiseRentalDate
         );
         houseDetail.tenantInfo.paymentDate = `每月${houseDetail.tenantInfo.paymentDate}号`;
         this.houseDetail = houseDetail
       }
-      
       console.log('housedetail',this.houseDetail)
     }
   },

@@ -51,7 +51,7 @@ const store = new Vuex.Store({
         if (userInfo.status === '关闭') {
           mpvue.showModal({
             title: '您的账户已被关闭',
-            content: '感谢您一直以来的支持，很遗憾看到您离开澳睿服务，有可能我们还有做得不够好的地方，希望能有机会让您看到我们的进步',
+            content: '尊敬的业主：\r\n真诚的感谢您一直以来的支持，希望在未来的日子里还能再次为您提供澳睿优质服务。祝一切顺利!',
             complete: () => {
               commit('userLogout', userInfo)
               mpvue.switchTab({ url: "/pages/myself/main" });

@@ -98,7 +98,7 @@ export default {
           active: false
         },
         {
-          title: "FAQs",
+          title: "常见问题",
           active: false
         }
       ]
