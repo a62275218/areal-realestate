@@ -52,6 +52,7 @@
         @click="navigateItem({item,idx})"
       >
         <image :src="item.active?item.activeImg:item.img" alt mode="widthFix" />
+        <div class="notification" v-if="item.content === '物业维护' && notification > 0"></div>
         <div>{{item.content}}</div>
       </div>
     </div>
@@ -123,7 +124,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["userInfo", "houseList"]),
+    ...mapState(["userInfo", "houseList",'notification']),
     message() {
       return this.$store.state.userInfo.uncheckedMsgNum
         ? `您有${this.$store.state.userInfo.uncheckedMsgNum}条新消息`
@@ -267,6 +268,7 @@ export default {
     color: $font-color !important;
   }
   .menu-item {
+    position: relative;
     width: 50%;
     border: 2rpx solid $bg-color;
     box-sizing: border-box;
@@ -275,6 +277,15 @@ export default {
     align-items: center;
     color: $font-color;
     padding: 60rpx 0;
+    .notification {
+      position: absolute;
+      top: 30rpx;
+      right: 30rpx;
+      width: 20rpx;
+      height: 20rpx;
+      background: rgb(235, 34, 34);
+      border-radius: 50%;
+    }
     image {
       width: 50rpx;
       margin-right: 20rpx;

@@ -11,7 +11,7 @@
       <div class="row" v-for="item in menu" :key="item" @click="navigate(item)">
         <div>{{item.name}}</div>
         <div>
-          <image style="width:30rpx" src="/static/images/Right arrow.png" mode="widthFix" />
+          <image style="width:30rpx;height:30rpx;" src="/static/images/Right-arrow.png" mode="widthFix" />
         </div>
       </div>
     </div>

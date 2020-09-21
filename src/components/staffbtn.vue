@@ -16,14 +16,15 @@ export default {
 
 <style lang="scss">
 .staff-btn {
+  position:fixed;
   width: 140rpx;
   height: 140rpx;
-  position: fixed;
-  bottom: 180rpx;
+  top:60%;
   right: 50rpx;
-  
+  z-index:9999999999999999999999;
   image{
     width:100%;
+    display:block;
   }
 }
 </style>

@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     showFilter: false,
     tipShow: false,
     activeIndex: 0,
+    notification: 0,
     navBarHeight: 0
   },
   actions: {
@@ -47,7 +48,13 @@ const store = new Vuex.Store({
         data: { id },
         hideLoading: true
       })
+
       if (userInfo) {
+        const notification = await request("fetchRemindMaintainNumByUserId", {
+          data: { userId: id },
+          hideLoading: true
+        })
+        state.notification = notification;
         if (userInfo.status === '关闭') {
           mpvue.showModal({
             title: '您的账户已被关闭',

@@ -80,6 +80,9 @@ export default {
         this.getFilterInfo();
       }
     });
+    this.$store.dispatch("fetchNotification", {
+      id: this.$store.state.userInfo.id
+    });
   },
   methods: {
     handleSearchChange(item) {
